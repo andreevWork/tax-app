@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+
+jobs:
+  branch-naming:
+    name: Check branch naming convention
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'pull_request' && 
+      github.head_ref != 'main'
+
+    steps:
+      - name: Validate branch name
+        run: |
+          branch_name="${{ github.head_ref }}"
+          echo "🔍 Checking branch name: $branch_name"
+
+          if [[ ! "$branch_name" =~ ^TAX-[0-9]+/[a-zA-Z0-9-]+$ ]]; then
+            echo "❌ Invalid branch name: '$branch_name'"
+            echo "::error::Branch name '$branch_name' does not follow naming convention"
+            echo ""
+            echo "📋 Branch naming rules:"
+            echo "   - Format: TAX-<number>/<description>"
+            echo "   - Example: TAX-3/setup-vitest" 
+            echo "   - Use letters, numbers and hyphens in description"
+            echo ""
+            echo "💡 How to fix:"
+            echo "   git branch -m <new-correct-name>"
+            echo "   Example: git branch -m TAX-3/setup-vitest"
+            exit 1
+          fi
+
+          echo "✅ Branch name is valid: $branch_name"
+
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && needs.branch-naming.result == 'success')
+
+    needs: branch-naming
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check code format
+        run: npm run format
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Build project
+        run: npm run build
