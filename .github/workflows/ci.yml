@@ -21,11 +21,17 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: node scripts/checkBranchName.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: branch-status
+          path: ci-artifacts/
 
   lint:
     name: 🔍 ESLint
     runs-on: ubuntu-latest
     needs: branch-naming
+    if: always() && (needs.branch-naming.result == 'success' || needs.branch-naming.result == 'skipped')
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -33,18 +39,24 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
-      - run: npm run lint || echo '{"ok":false}' > ci-artifacts/lint-status.json
-      - if: success()
-        run: echo '{"ok":true}' > ci-artifacts/lint-status.json
+      - run: mkdir -p ci-artifacts
+      - run: |
+          if npm run lint; then
+            echo '{"ok":true}' > ci-artifacts/lint-status.json
+          else
+            echo '{"ok":false}' > ci-artifacts/lint-status.json
+          fi
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: ci-artifacts
+          name: lint-status
           path: ci-artifacts/
 
   format:
     name: 💅 Format check
     runs-on: ubuntu-latest
     needs: branch-naming
+    if: always() && (needs.branch-naming.result == 'success' || needs.branch-naming.result == 'skipped')
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -52,18 +64,24 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
-      - run: npm run format || echo '{"ok":false}' > ci-artifacts/format-status.json
-      - if: success()
-        run: echo '{"ok":true}' > ci-artifacts/format-status.json
+      - run: mkdir -p ci-artifacts
+      - run: |
+          if npm run format; then
+            echo '{"ok":true}' > ci-artifacts/format-status.json
+          else
+            echo '{"ok":false}' > ci-artifacts/format-status.json
+          fi
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: ci-artifacts
+          name: format-status
           path: ci-artifacts/
 
   build:
     name: 🏗️ Build project
     runs-on: ubuntu-latest
     needs: branch-naming
+    if: always() && (needs.branch-naming.result == 'success' || needs.branch-naming.result == 'skipped')
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -71,12 +89,17 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
-      - run: npm run build || echo '{"ok":false}' > ci-artifacts/build-status.json
-      - if: success()
-        run: echo '{"ok":true}' > ci-artifacts/build-status.json
+      - run: mkdir -p ci-artifacts
+      - run: |
+          if npm run build; then
+            echo '{"ok":true}' > ci-artifacts/build-status.json
+          else
+            echo '{"ok":false}' > ci-artifacts/build-status.json
+          fi
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: ci-artifacts
+          name: build-status
           path: ci-artifacts/
 
   summary:
@@ -85,10 +108,11 @@ jobs:
     if: always()
     needs: [branch-naming, lint, format, build]
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: ci-artifacts
           path: ci-artifacts/
+          merge-multiple: true
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
