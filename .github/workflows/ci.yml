@@ -8,62 +8,88 @@ on:
 
 jobs:
   branch-naming:
-    name: Check branch naming convention
+    name: 🧾 Check branch naming
     runs-on: ubuntu-latest
     if: |
-      github.event_name == 'pull_request' && 
+      github.event_name == 'pull_request' &&
       github.head_ref != 'main'
-
     steps:
-      - name: Validate branch name
-        run: |
-          branch_name="${{ github.head_ref }}"
-          echo "🔍 Checking branch name: $branch_name"
-
-          if [[ ! "$branch_name" =~ ^TAX-[0-9]+/[a-zA-Z0-9-]+$ ]]; then
-            echo "❌ Invalid branch name: '$branch_name'"
-            echo "::error::Branch name '$branch_name' does not follow naming convention"
-            echo ""
-            echo "📋 Branch naming rules:"
-            echo "   - Format: TAX-<number>/<description>"
-            echo "   - Example: TAX-3/setup-vitest" 
-            echo "   - Use letters, numbers and hyphens in description"
-            echo ""
-            echo "💡 How to fix:"
-            echo "   git branch -m <new-correct-name>"
-            echo "   Example: git branch -m TAX-3/setup-vitest"
-            exit 1
-          fi
-
-          echo "✅ Branch name is valid: $branch_name"
-
-  build-and-test:
-    name: Build and Test
-    runs-on: ubuntu-latest
-    if: |
-      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' && needs.branch-naming.result == 'success')
-
-    needs: branch-naming
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
+      - run: npm ci
+      - run: node scripts/checkBranchName.js
 
-      - name: Install dependencies
-        run: npm ci
+  lint:
+    name: 🔍 ESLint
+    runs-on: ubuntu-latest
+    needs: branch-naming
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint || echo '{"ok":false}' > ci-artifacts/lint-status.json
+      - if: success()
+        run: echo '{"ok":true}' > ci-artifacts/lint-status.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ci-artifacts
+          path: ci-artifacts/
 
-      - name: Check code format
-        run: npm run format
+  format:
+    name: 💅 Format check
+    runs-on: ubuntu-latest
+    needs: branch-naming
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run format || echo '{"ok":false}' > ci-artifacts/format-status.json
+      - if: success()
+        run: echo '{"ok":true}' > ci-artifacts/format-status.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ci-artifacts
+          path: ci-artifacts/
 
-      - name: Run ESLint
-        run: npm run lint
+  build:
+    name: 🏗️ Build project
+    runs-on: ubuntu-latest
+    needs: branch-naming
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build || echo '{"ok":false}' > ci-artifacts/build-status.json
+      - if: success()
+        run: echo '{"ok":true}' > ci-artifacts/build-status.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ci-artifacts
+          path: ci-artifacts/
 
-      - name: Build project
-        run: npm run build
+  summary:
+    name: 🧾 Summary
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [branch-naming, lint, format, build]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ci-artifacts
+          path: ci-artifacts/
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - run: node scripts/ciSummary.js
