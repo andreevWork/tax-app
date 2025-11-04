@@ -7,31 +7,9 @@ on:
     branches: [main]
 
 jobs:
-  branch-naming:
-    name: 🧾 Check branch naming
-    runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'pull_request' &&
-      github.head_ref != 'main'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      - run: npm ci
-      - run: node scripts/checkBranchName.js
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: branch-status
-          path: ci-artifacts/
-
   lint:
     name: 🔍 ESLint
     runs-on: ubuntu-latest
-    needs: branch-naming
-    if: always() && (needs.branch-naming.result == 'success' || needs.branch-naming.result == 'skipped')
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -55,8 +33,6 @@ jobs:
   format:
     name: 💅 Format check
     runs-on: ubuntu-latest
-    needs: branch-naming
-    if: always() && (needs.branch-naming.result == 'success' || needs.branch-naming.result == 'skipped')
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -80,8 +56,6 @@ jobs:
   build:
     name: 🏗️ Build project
     runs-on: ubuntu-latest
-    needs: branch-naming
-    if: always() && (needs.branch-naming.result == 'success' || needs.branch-naming.result == 'skipped')
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -102,11 +76,33 @@ jobs:
           name: build-status
           path: ci-artifacts/
 
+  branch-naming:
+    name: 🧾 Check branch naming
+    runs-on: ubuntu-latest
+    if: |
+      always() &&
+      github.event_name == 'pull_request' &&
+      github.head_ref != 'main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci
+      - run: mkdir -p ci-artifacts
+      - run: node scripts/checkBranchName.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: branch-status
+          path: ci-artifacts/
+
   summary:
     name: 🧾 Summary
     runs-on: ubuntu-latest
+    needs: [lint, format, build, branch-naming]
     if: always()
-    needs: [branch-naming, lint, format, build]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
