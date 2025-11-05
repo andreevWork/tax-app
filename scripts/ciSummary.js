@@ -26,9 +26,15 @@ for (const check of checks) {
     if (data.ok) {
       summary += `### ✅ ${check.name}\nAll checks passed successfully.\n\n`;
     } else {
-      summary += `### ❌ ${check.name}\nErrors were found during ${check.name} check.\n\n`;
+      summary += `### ❌ ${check.name}\n`;
+      summary += `Errors were found during ${check.name} check.\n\n`;
+      
       if (data.error) {
-        summary += `> ${data.error}\n\n`;
+        summary += `**Error Details:**\n\`\`\`\n${data.error}\n\`\`\`\n\n`;
+      }
+      
+      if (data.message) {
+        summary += `**Message:** ${data.message}\n\n`;
       }
     }
   } catch (err) {

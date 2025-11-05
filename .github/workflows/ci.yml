@@ -19,10 +19,11 @@ jobs:
       - run: npm ci
       - run: mkdir -p ci-artifacts
       - run: |
-          if npm run lint; then
+          if npm run lint 2>&1 | tee lint-output.txt; then
             echo '{"ok":true}' > ci-artifacts/lint-status.json
           else
-            echo '{"ok":false}' > ci-artifacts/lint-status.json
+            ERROR_OUTPUT=$(cat lint-output.txt)
+            node -e "const fs = require('fs'); fs.writeFileSync('ci-artifacts/lint-status.json', JSON.stringify({ok: false, error: process.argv[1]}, null, 2));" "$ERROR_OUTPUT"
             exit 1
           fi
       - uses: actions/upload-artifact@v4
@@ -43,10 +44,11 @@ jobs:
       - run: npm ci
       - run: mkdir -p ci-artifacts
       - run: |
-          if npm run format; then
+          if npm run format 2>&1 | tee format-output.txt; then
             echo '{"ok":true}' > ci-artifacts/format-status.json
           else
-            echo '{"ok":false}' > ci-artifacts/format-status.json
+            ERROR_OUTPUT=$(cat format-output.txt)
+            node -e "const fs = require('fs'); fs.writeFileSync('ci-artifacts/format-status.json', JSON.stringify({ok: false, error: process.argv[1]}, null, 2));" "$ERROR_OUTPUT"
             exit 1
           fi
       - uses: actions/upload-artifact@v4
@@ -67,10 +69,11 @@ jobs:
       - run: npm ci
       - run: mkdir -p ci-artifacts
       - run: |
-          if npm run build; then
+          if npm run build 2>&1 | tee build-output.txt; then
             echo '{"ok":true}' > ci-artifacts/build-status.json
           else
-            echo '{"ok":false}' > ci-artifacts/build-status.json
+            ERROR_OUTPUT=$(cat build-output.txt)
+            node -e "const fs = require('fs'); fs.writeFileSync('ci-artifacts/build-status.json', JSON.stringify({ok: false, error: process.argv[1]}, null, 2));" "$ERROR_OUTPUT"
             exit 1
           fi
       - uses: actions/upload-artifact@v4

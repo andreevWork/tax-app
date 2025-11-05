@@ -6,15 +6,15 @@ const summaryPath = process.env.GITHUB_STEP_SUMMARY;
 
 const result = {
   branch: branchName || '(unknown)',
-  valid: true,
+  ok: true,
   message: '',
 };
 
 if (!branchName) {
-  result.valid = false;
+  result.ok = false;
   result.message = '⚠️ Unable to determine branch name';
 } else if (!pattern.test(branchName)) {
-  result.valid = false;
+  result.ok = false;
   result.message = `⚠️ Invalid branch name: "${branchName}". Expected format: TAX-<number>/<description>`;
 } else {
   result.message = `✅ Valid branch name: ${branchName}`;
@@ -29,8 +29,8 @@ if (summaryPath) {
   const summary = `
 ### 🧾 Branch Name Validation
 **Branch:** \`${result.branch}\`
-**Status:** ${result.valid ? '✅ Valid' : '⚠️ Invalid'}
-**Details:** ${result.valid ? 'Follows naming convention.' : 'Should match TAX-<number>/<description> (e.g. TAX-3/setup-vitest)'}
+**Status:** ${result.ok ? '✅ Valid' : '⚠️ Invalid'}
+**Details:** ${result.ok ? 'Follows naming convention.' : 'Should match TAX-<number>/<description> (e.g. TAX-3/setup-vitest)'}
 `;
   fs.appendFileSync(summaryPath, summary);
 }
