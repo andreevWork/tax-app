@@ -19,6 +19,7 @@ jobs:
       - run: npm ci
       - run: mkdir -p ci-artifacts
       - run: |
+          set -o pipefail
           if npm run lint 2>&1 | tee lint-output.txt; then
             echo '{"ok":true}' > ci-artifacts/lint-status.json
           else
@@ -44,6 +45,7 @@ jobs:
       - run: npm ci
       - run: mkdir -p ci-artifacts
       - run: |
+          set -o pipefail
           if npm run format 2>&1 | tee format-output.txt; then
             echo '{"ok":true}' > ci-artifacts/format-status.json
           else
@@ -69,6 +71,7 @@ jobs:
       - run: npm ci
       - run: mkdir -p ci-artifacts
       - run: |
+          set -o pipefail
           if npm run build 2>&1 | tee build-output.txt; then
             echo '{"ok":true}' > ci-artifacts/build-status.json
           else
