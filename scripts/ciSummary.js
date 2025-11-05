@@ -1,35 +1,43 @@
 import fs from 'fs';
+import path from 'path';
 
 const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+const artifactsDir = 'ci-artifacts';
+
+const checks = [
+  { name: 'ESLint', file: 'lint-status.json' },
+  { name: 'Prettier Format', file: 'format-status.json' },
+  { name: 'Build', file: 'build-status.json' },
+  { name: 'Branch Name', file: 'branch-status.json' },
+];
+
 let summary = `## 🧾 CI Summary\n\n`;
 
-function readJson(path, defaultValue) {
+for (const check of checks) {
+  const filePath = path.join(artifactsDir, check.file);
+
+  if (!fs.existsSync(filePath)) {
+    summary += `### ${check.name}\n⚪ Not executed\n\n`;
+    continue;
+  }
+
   try {
-    return JSON.parse(fs.readFileSync(path, 'utf-8'));
-  } catch {
-    return defaultValue;
+    const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    if (data.ok) {
+      summary += `### ✅ ${check.name}\nAll checks passed successfully.\n\n`;
+    } else {
+      summary += `### ❌ ${check.name}\nErrors were found during ${check.name} check.\n\n`;
+      if (data.error) {
+        summary += `> ${data.error}\n\n`;
+      }
+    }
+  } catch (err) {
+    summary += `### ⚠️ ${check.name}\nFailed to parse status file.\n\n`;
   }
 }
 
-const branch = readJson('ci-artifacts/branch-status.json', {});
-const lint = readJson('ci-artifacts/lint-status.json', {});
-const format = readJson('ci-artifacts/format-status.json', {});
-const build = readJson('ci-artifacts/build-status.json', {});
-const test = readJson('ci-artifacts/test-status.json', {});
-
-const emoji = (ok) => (ok ? '✅' : '❌');
-
-summary += `**Branch:** \`${branch.branch || '(unknown)'}\`\n`;
-summary += `${branch.valid ? '✅ Valid branch name' : '⚠️ Invalid branch name'}\n\n`;
-
-summary += `### 🔍 Results\n`;
-summary += `- Lint: ${emoji(lint.ok)}\n`;
-summary += `- Format: ${emoji(format.ok)}\n`;
-summary += `- Build: ${emoji(build.ok)}\n`;
-summary += `- Tests: ${emoji(test.ok)}\n`;
-
 if (summaryPath) {
   fs.writeFileSync(summaryPath, summary);
-} else {
-  console.log(summary);
 }
+
+console.log(summary);
