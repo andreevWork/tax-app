@@ -33,7 +33,7 @@ export default defineConfig(
         { allowConstantExport: true },
       ],
       'prettier/prettier': 'error',
-    }
+    },
   },
   // Must be last to disable conflicting ESLint rules
   eslintConfigPrettier

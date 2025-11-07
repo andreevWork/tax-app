@@ -23,7 +23,10 @@ if (!branchName) {
 console.log(result.message);
 
 fs.mkdirSync('ci-artifacts', { recursive: true });
-fs.writeFileSync('ci-artifacts/branch-status.json', JSON.stringify(result, null, 2));
+fs.writeFileSync(
+  'ci-artifacts/branch-status.json',
+  JSON.stringify(result, null, 2)
+);
 
 if (summaryPath) {
   const summary = `

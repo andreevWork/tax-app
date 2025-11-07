@@ -28,11 +28,11 @@ for (const check of checks) {
   } else {
     summary += `### ❌ ${check.name}\n`;
     summary += `Errors were found during ${check.name} check.\n\n`;
-    
+
     if (data.error) {
       summary += `**Error Details:**\n\`\`\`\n${data.error}\n\`\`\`\n\n`;
     }
-    
+
     if (data.message) {
       summary += `**Message:** ${data.message}\n\n`;
     }
