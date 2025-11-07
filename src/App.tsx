@@ -1,11 +1,20 @@
 import clsx from 'clsx';
-import { useState } from 'react';
 import AppCss from './App.module.css';
 import reactLogo from './assets/react.svg';
+import { useAppStore, useThemeStore, useUserStore } from './store';
 import viteLogo from '/vite.svg';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const { count, increase, decrease, reset } = useAppStore();
+  const { username, isLoggedIn, login, logout } = useUserStore();
+  const {
+    theme,
+    isSidebarOpen,
+    language,
+    toggleTheme,
+    toggleSidebar,
+    setLanguage,
+  } = useThemeStore();
 
   return (
     <>
@@ -21,18 +30,56 @@ function App() {
           />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>Vite + React + Zustand</h1>
       <div className={AppCss.card}>
-        <button
-          onClick={() => {
-            setCount((count) => count + 1);
-          }}
-        >
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <h2>App State (example)</h2>
+        <p>Count: {count}</p>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
+          <button onClick={decrease}>Decrease -</button>
+          <button onClick={reset}>Reset</button>
+          <button onClick={increase}>Increase +</button>
+        </div>
+      </div>
+      <div className={AppCss.card}>
+        <h2>User State (example)</h2>
+        {isLoggedIn ? (
+          <>
+            <p>Welcome, {username}!</p>
+            <button onClick={logout}>Logout</button>
+          </>
+        ) : (
+          <button
+            onClick={() => {
+              login('John', 'john@example.com');
+            }}
+          >
+            Login
+          </button>
+        )}
+      </div>
+      <div className={AppCss.card}>
+        <h2>Theme & UI (example)</h2>
+        <p>Current theme: {theme}</p>
+        <button onClick={toggleTheme}>Toggle Theme</button>
+        <p>Sidebar: {isSidebarOpen ? 'Open' : 'Closed'}</p>
+        <button onClick={toggleSidebar}>Toggle Sidebar</button>
+        <p>Language: {language}</p>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
+          <button
+            onClick={() => {
+              setLanguage('ru');
+            }}
+          >
+            Ru
+          </button>
+          <button
+            onClick={() => {
+              setLanguage('en');
+            }}
+          >
+            En
+          </button>
+        </div>
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
