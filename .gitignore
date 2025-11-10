@@ -23,3 +23,8 @@ dist-ssr
 
 # Vitest coverage output
 coverage/
+
+# playwright
+playwright-report/
+test-results/
+playwright/.cache/

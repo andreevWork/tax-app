@@ -53,6 +53,30 @@ jobs:
           name: coverage-report
           path: coverage/
 
+  e2e:
+    name: 🌐 E2E tests (Playwright)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup, build, and run E2E tests
+        uses: ./.github/actions/setup-and-run
+        with:
+          script-name: 'e2e'
+          command: |
+            npm run build
+            npm run preview -- --port=5173 &
+            npx wait-on http://localhost:5173
+            npm run test:e2e:ci
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+
   branch-naming:
     name: 🧾 Check branch naming
     runs-on: ubuntu-latest
