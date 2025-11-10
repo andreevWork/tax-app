@@ -11,7 +11,7 @@ export default defineConfig(
   globalIgnores(['dist', '**/*.js']),
   js.configs.recommended,
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
     extends: [...tseslint.configs.strictTypeChecked],
     languageOptions: {
       ecmaVersion: 2022,
@@ -33,6 +33,24 @@ export default defineConfig(
         { allowConstantExport: true },
       ],
       'prettier/prettier': 'error',
+    },
+  },
+  {
+    files: ['**/*.config.{js,ts}'],
+    languageOptions: {
+      sourceType: 'module',
+      ecmaVersion: 2022,
+      globals: globals.node,
+      parserOptions: {
+        projectService: false,
+      },
+    },
+    plugins: {
+      prettier: prettierPlugin,
+    },
+    rules: {
+      'prettier/prettier': 'error',
+      '@typescript-eslint/await-thenable': 'off',
     },
   },
   // Must be last to disable conflicting ESLint rules
