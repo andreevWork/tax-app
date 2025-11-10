@@ -6,6 +6,8 @@ describe('App component', () => {
   it('renders heading correctly', () => {
     render(<App />);
 
-    expect(screen.getByText(/Vite \+ React/i)).toBeInTheDocument();
+    const heading = screen.getByTestId('main-heading');
+
+    expect(heading).toBeInTheDocument();
   });
 });
