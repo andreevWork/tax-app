@@ -1,0 +1,49 @@
+name: 'Setup and Run'
+description: 'Common setup and execution steps'
+
+inputs:
+  script-name:
+    description: 'Name of the script/task'
+    required: true
+  command:
+    description: 'Command to run'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: '.nvmrc'
+        cache: 'npm'
+    - run: npm ci
+      shell: bash
+    - run: mkdir -p ci-artifacts
+      shell: bash
+    - name: Run ${{ inputs.script-name }}
+      shell: bash
+      run: |
+        set -o pipefail
+        if ${{ inputs.command }} 2>&1 | tee ${{ inputs.script-name }}-output.txt; then
+          echo '{"ok":true,"name":"${{ inputs.script-name }}"}' > ci-artifacts/${{ inputs.script-name }}-status.json
+        else
+          ERROR_OUTPUT=$(cat ${{ inputs.script-name }}-output.txt | head -1000)
+          node -e "
+            const fs = require('fs');
+            const errorOutput = process.argv[1] || 'Unknown error';
+            fs.writeFileSync('ci-artifacts/${{ inputs.script-name }}-status.json', 
+              JSON.stringify({
+                ok: false,
+                name: '${{ inputs.script-name }}',
+                error: errorOutput
+              }, null, 2)
+            );
+            console.log('Error saved:', errorOutput.substring(0, 100));
+          " "$ERROR_OUTPUT"
+          exit 1
+        fi
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ${{ inputs.script-name }}-status
+        path: ci-artifacts/
