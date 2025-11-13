@@ -1,4 +1,4 @@
-@import './variables.scss';
+@import './variables.css';
 
 * {
   margin: 0;
@@ -12,8 +12,8 @@ body,
 }
 body {
   padding: 16px;
-  background: $primary_white;
+  background: var(--primary-white);
   font-size: 16px;
   font-weight: 400;
-  color: $primary_dark;
+  color: var(--primary-dark);
 }
