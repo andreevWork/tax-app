@@ -10,6 +10,8 @@ const checks = [
   { name: 'Prettier Format', file: 'format-status.json' },
   { name: 'Build', file: 'build-status.json' },
   { name: 'Branch Name', file: 'branch-status.json' },
+  { name: 'Vitest (Unit Tests)', file: 'test-status.json' },
+  { name: 'E2E Tests (Playwright)', file: 'e2e-status.json' },
 ];
 
 let summary = `## 🧾 CI Summary\n\n`;
