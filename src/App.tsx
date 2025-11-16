@@ -16,10 +16,12 @@ function App() {
     setLanguage,
   } = useThemeStore();
 
+  const brokenVariable = 123;
+
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
+        <a href="https://vite.dev" target="_blank" ,>
           <img src={viteLogo} className={AppCss.logo} alt="Vite logo" />
         </a>
         <a href="https://react.dev" target="_blank">
@@ -30,7 +32,7 @@ function App() {
           />
         </a>
       </div>
-      <h1 data-testid="main-heading">Vite + React + Zustand</h1>
+      {/* <h1 data-testid="main-heading">Vite + React + Zustand</h1> */}
       <div className={AppCss.card}>
         <h2>App State (example)</h2>
         <p>Count: {count}</p>
