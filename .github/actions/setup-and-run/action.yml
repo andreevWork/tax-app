@@ -46,7 +46,16 @@ runs:
       shell: bash
       run: |
         ERROR_OUTPUT="Command failed for ${{ inputs.script-name }}"
-        echo "$ERROR_OUTPUT" > ci-artifacts/${{ inputs.script-name }}-status.json
+
+        if [ -f "ci-artifacts/${{ inputs.script-name }}-stderr.log" ]; then
+          STDERR_CONTENT=$(cat ci-artifacts/${{ inputs.script-name }}-stderr.log | sed 's/"/\\"/g')
+        else
+          STDERR_CONTENT=""
+        fi
+
+        echo "{\"ok\": false, \"error\": \"$ERROR_OUTPUT\", \"stderr\": \"$STDERR_CONTENT\"}" \
+          > ci-artifacts/${{ inputs.script-name }}-status.json
+
         exit 1
 
     - uses: actions/upload-artifact@v4
