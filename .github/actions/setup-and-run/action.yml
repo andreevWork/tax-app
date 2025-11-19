@@ -32,7 +32,7 @@ runs:
         echo "Running command:"
         echo "${{ inputs.command }}"
 
-        bash -e <<'EOF'
+        bash -e <<'EOF' 2> "ci-artifacts/${{ inputs.script-name }}-stderr.log"
         ${{ inputs.command }}
         EOF
 
@@ -45,15 +45,19 @@ runs:
       if: failure()
       shell: bash
       run: |
-        ERROR_OUTPUT="Command failed for ${{ inputs.script-name }}"
-
         if [ -f "ci-artifacts/${{ inputs.script-name }}-stderr.log" ]; then
-          STDERR_CONTENT=$(cat ci-artifacts/${{ inputs.script-name }}-stderr.log | sed 's/"/\\"/g')
+          LAST_ERROR_LINE=$(tail -1 "ci-artifacts/${{ inputs.script-name }}-stderr.log" | sed 's/"/\\"/g' | tr -d '\n')
+          
+          if [ -n "$LAST_ERROR_LINE" ]; then
+            ERROR_OUTPUT="$LAST_ERROR_LINE"
+          else
+            ERROR_OUTPUT="Command failed for ${{ inputs.script-name }}"
+          fi
         else
-          STDERR_CONTENT=""
+          ERROR_OUTPUT="Command failed for ${{ inputs.script-name }} (no stderr available)"
         fi
 
-        echo "{\"ok\": false, \"error\": \"$ERROR_OUTPUT\", \"stderr\": \"$STDERR_CONTENT\"}" \
+        echo "{\"ok\": false, \"error\": \"$ERROR_OUTPUT\"}" \
           > ci-artifacts/${{ inputs.script-name }}-status.json
 
         exit 1
