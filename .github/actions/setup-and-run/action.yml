@@ -48,8 +48,7 @@ runs:
         ERROR_OUTPUT="Command failed for ${{ inputs.script-name }}"
         
         if [ -f "ci-artifacts/${{ inputs.script-name }}-output.log" ]; then
-          # Get last 10 non-empty lines from output
-          LAST_LINES=$(grep -v '^[[:space:]]*$' "ci-artifacts/${{ inputs.script-name }}-output.log" | tail -10 | sed 's/"/\\"/g' | awk '{printf "%s\\n", $0}' | sed '$ s/\\n$//')
+          LAST_LINES=$(grep -v '^[[:space:]]*$' "ci-artifacts/${{ inputs.script-name }}-output.log" | tail -10 | sed 's/\x1b\[[0-9;]*m//g' | sed 's/"/\\"/g' | awk '{printf "%s\\n", $0}' | sed '$ s/\\n$//')
           
           if [ -n "$LAST_LINES" ]; then
             ERROR_OUTPUT="$LAST_LINES"
