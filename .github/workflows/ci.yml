@@ -10,6 +10,7 @@ jobs:
   lint:
     name: 🔍 ESLint
     runs-on: ubuntu-latest
+    if: always()
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-and-run
@@ -20,6 +21,7 @@ jobs:
   format:
     name: 💅 Format check
     runs-on: ubuntu-latest
+    if: always()
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-and-run
@@ -30,6 +32,7 @@ jobs:
   build:
     name: 🏗️ Build project
     runs-on: ubuntu-latest
+    if: always()
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-and-run
@@ -40,6 +43,7 @@ jobs:
   test:
     name: 🧪 Unit tests (Vitest)
     runs-on: ubuntu-latest
+    if: always()
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-and-run
@@ -56,6 +60,7 @@ jobs:
   e2e:
     name: 🌐 E2E tests (Playwright)
     runs-on: ubuntu-latest
+    if: always()
 
     steps:
       - uses: actions/checkout@v4
