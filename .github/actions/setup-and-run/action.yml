@@ -65,4 +65,4 @@ runs:
       if: always()
       with:
         name: ${{ inputs.script-name }}-status
-        path: ci-artifacts/
+        path: ci-artifacts/${{ inputs.script-name }}-status.json
