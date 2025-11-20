@@ -65,6 +65,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
       - name: Setup, build, and run E2E tests
         uses: ./.github/actions/setup-and-run
         with:
