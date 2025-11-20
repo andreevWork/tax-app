@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { readJson } from './utils.js';
+import { readJson } from '../utils/readJson.js';
 
 const summaryPath = process.env.GITHUB_STEP_SUMMARY;
 const artifactsDir = 'ci-artifacts';

@@ -1,5 +1,8 @@
 name: CI
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -65,6 +68,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
       - name: Setup, build, and run E2E tests
         uses: ./.github/actions/setup-and-run
         with:
@@ -97,7 +103,7 @@ jobs:
       - run: npm ci
       - run: mkdir -p ci-artifacts
       - run: |
-          node scripts/checkBranchName.js || echo "⚠️ Branch name check reported invalid (non-blocking)."
+          node scripts/ci/checkBranchName.js || echo "⚠️ Branch name check reported invalid (non-blocking)."
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -118,4 +124,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-      - run: node scripts/ciSummary.js
+      - run: node scripts/ci/ciSummary.js
