@@ -11,7 +11,7 @@ export default defineConfig(
   globalIgnores(['dist', '**/*.js']),
   js.configs.recommended,
   {
-    files: ['src/**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}', 'e2e/**/*.{ts,tsx}'],
     extends: [...tseslint.configs.strictTypeChecked],
     languageOptions: {
       ecmaVersion: 2022,

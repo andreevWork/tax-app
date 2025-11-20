@@ -97,7 +97,7 @@ jobs:
       - run: npm ci
       - run: mkdir -p ci-artifacts
       - run: |
-          node scripts/checkBranchName.js || echo "⚠️ Branch name check reported invalid (non-blocking)."
+          node scripts/ci/checkBranchName.js || echo "⚠️ Branch name check reported invalid (non-blocking)."
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -118,4 +118,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-      - run: node scripts/ciSummary.js
+      - run: node scripts/ci/ciSummary.js
