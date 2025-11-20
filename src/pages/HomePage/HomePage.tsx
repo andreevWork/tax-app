@@ -1,4 +1,4 @@
-import { CaseSettings } from '../../components/CaseSettings/CaseSettings';
+import { CaseSettings } from '../../components/caseSettings/CaseSettings';
 import { TaxChart } from '../../components/TaxChart/TaxChart';
 import styles from './HomePage.module.css';
 
