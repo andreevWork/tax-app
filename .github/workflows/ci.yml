@@ -1,5 +1,8 @@
 name: CI
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -10,6 +13,7 @@ jobs:
   lint:
     name: 🔍 ESLint
     runs-on: ubuntu-latest
+    if: always()
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-and-run
@@ -20,6 +24,7 @@ jobs:
   format:
     name: 💅 Format check
     runs-on: ubuntu-latest
+    if: always()
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-and-run
@@ -30,12 +35,58 @@ jobs:
   build:
     name: 🏗️ Build project
     runs-on: ubuntu-latest
+    if: always()
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-and-run
         with:
           script-name: 'build'
           command: 'npm run build'
+
+  test:
+    name: 🧪 Unit tests (Vitest)
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-and-run
+        with:
+          script-name: 'test'
+          command: 'npm run test:coverage'
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+  e2e:
+    name: 🌐 E2E tests (Playwright)
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Setup, build, and run E2E tests
+        uses: ./.github/actions/setup-and-run
+        with:
+          script-name: 'e2e'
+          command: |
+            npm run build
+            npm run preview -- --port=5173 &
+            npx wait-on http://localhost:5173
+            npm run test:e2e:ci
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
 
   branch-naming:
     name: 🧾 Check branch naming
@@ -52,7 +103,7 @@ jobs:
       - run: npm ci
       - run: mkdir -p ci-artifacts
       - run: |
-          node scripts/checkBranchName.js || echo "⚠️ Branch name check reported invalid (non-blocking)."
+          node scripts/ci/checkBranchName.js || echo "⚠️ Branch name check reported invalid (non-blocking)."
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -62,7 +113,7 @@ jobs:
   summary:
     name: 🧾 Summary
     runs-on: ubuntu-latest
-    needs: [lint, format, build, branch-naming]
+    needs: [lint, format, build, branch-naming, test, e2e]
     if: always()
     steps:
       - uses: actions/checkout@v4
@@ -73,4 +124,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-      - run: node scripts/ciSummary.js
+      - run: node scripts/ci/ciSummary.js

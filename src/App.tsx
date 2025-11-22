@@ -30,7 +30,7 @@ function App() {
           />
         </a>
       </div>
-      <h1>Vite + React + Zustand</h1>
+      <h1 data-testid="main-heading">Vite + React + Zustand</h1>
       <div className={AppCss.card}>
         <h2>App State (example)</h2>
         <p>Count: {count}</p>
