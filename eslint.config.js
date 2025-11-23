@@ -8,10 +8,10 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig(
-  globalIgnores(['dist', '**/*.js']),
+  globalIgnores(['dist']),
   js.configs.recommended,
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}', 'e2e/**/*.{ts,tsx}'],
     extends: [...tseslint.configs.strictTypeChecked],
     languageOptions: {
       ecmaVersion: 2022,
@@ -33,6 +33,35 @@ export default defineConfig(
         { allowConstantExport: true },
       ],
       'prettier/prettier': 'error',
+    },
+  },
+  {
+    files: ['**/*.config.{js,ts}'],
+    languageOptions: {
+      sourceType: 'module',
+      ecmaVersion: 2022,
+      globals: globals.node,
+      parserOptions: {
+        projectService: false,
+      },
+    },
+    plugins: {
+      prettier: prettierPlugin,
+    },
+    rules: {
+      'prettier/prettier': 'error',
+      '@typescript-eslint/await-thenable': 'off',
+    },
+  },
+  {
+    files: ['scripts/ci/**/*.js'],
+    languageOptions: {
+      sourceType: 'module',
+      ecmaVersion: 2022,
+      globals: globals.node,
+      parserOptions: {
+        projectService: false,
+      },
     },
   },
   // Must be last to disable conflicting ESLint rules
