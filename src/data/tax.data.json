@@ -1,0 +1,87 @@
+{
+  "countries": [
+    {
+      "countryCode": "RU",
+      "name": "Russia",
+      "currency": "RUB",
+      "incomeTax": {
+        "type": "progressive",
+        "brackets": [
+          { "max": 2500000, "rate": 0.13 },
+          { "max": 50000000, "rate": 0.15 },
+          { "max": null, "rate": 0.2 }
+        ]
+      },
+      "deductions": {
+        "personal": { "amount": 0 },
+        "children": {
+          "type": "per_child_monthly",
+          "incomeLimit": {
+            "amount": 450000,
+            "period": "year"
+          },
+          "rules": [
+            { "childIndex": 1, "amount": 1400 },
+            { "childIndex": 2, "amount": 2800 },
+            { "childIndex": 3, "amount": 6000 }
+          ]
+        }
+      },
+      "consumptionTaxes": [
+        { "type": "vat", "rate": 0.2 },
+        { "type": "transport", "rate": 0.3 }
+      ]
+    },
+    {
+      "countryCode": "DE",
+      "name": "Germany",
+      "currency": "EUR",
+      "incomeTax": {
+        "type": "progressive",
+        "brackets": [
+          { "max": 11604, "rate": 0.0 },
+          { "max": 20000, "rate": 0.14 },
+          { "max": 35000, "rate": 0.24 },
+          { "max": 60000, "rate": 0.35 },
+          { "max": 300000, "rate": 0.42 },
+          { "max": null, "rate": 0.45 }
+        ]
+      },
+      "deductions": {
+        "personal": { "amount": 12348 },
+        "children": {
+          "type": "benefit_monthly",
+          "incomeLimit": null,
+          "rules": [{ "childIndex": "any", "amount": 250 }]
+        }
+      },
+      "consumptionTaxes": [
+        { "type": "vat", "rate": 0.19 },
+        { "type": "transport", "rate": 0.5 }
+      ]
+    },
+    {
+      "countryCode": "RS",
+      "name": "Serbia",
+      "currency": "RSD",
+      "incomeTax": {
+        "type": "progressive",
+        "brackets": [
+          { "max": 684000, "rate": 0.1 },
+          { "max": null, "rate": 0.15 }
+        ]
+      },
+      "deductions": {
+        "personal": { "amount": 22800 },
+        "children": {
+          "type": "none",
+          "rules": []
+        }
+      },
+      "consumptionTaxes": [
+        { "type": "vat", "rate": 0.2 },
+        { "type": "transport", "rate": 0.3 }
+      ]
+    }
+  ]
+}
