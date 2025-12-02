@@ -27,10 +27,7 @@
           ]
         }
       },
-      "consumptionTaxes": [
-        { "type": "vat", "rate": 0.2 },
-        { "type": "transport", "rate": 0.3 }
-      ]
+      "consumptionTaxes": [{ "type": "vat", "rate": 0.2 }]
     },
     {
       "countryCode": "DE",
@@ -52,13 +49,10 @@
         "children": {
           "type": "benefit_monthly",
           "incomeLimit": null,
-          "rules": [{ "childIndex": "any", "amount": 250 }]
+          "rules": [{ "childIndex": "all", "amount": 250 }]
         }
       },
-      "consumptionTaxes": [
-        { "type": "vat", "rate": 0.19 },
-        { "type": "transport", "rate": 0.5 }
-      ]
+      "consumptionTaxes": [{ "type": "vat", "rate": 0.19 }]
     },
     {
       "countryCode": "RS",
@@ -78,10 +72,7 @@
           "rules": []
         }
       },
-      "consumptionTaxes": [
-        { "type": "vat", "rate": 0.2 },
-        { "type": "transport", "rate": 0.3 }
-      ]
+      "consumptionTaxes": [{ "type": "vat", "rate": 0.2 }]
     }
   ]
 }
