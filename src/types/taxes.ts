@@ -73,3 +73,34 @@ export interface Country {
 export interface CountriesData {
   countries: Country[];
 }
+
+// ===== User Inputs =====
+export interface UserInputs {
+  gross: number;
+  childrenCount: number;
+  consumption?: number;
+  isMarried: boolean;
+}
+
+// ===== User Output =====
+export interface TaxesResult {
+  deductions: {
+    personal: number;
+    children: {
+      deduction: number;
+      benefit: number;
+    };
+    totalDeductions: number;
+  };
+  taxes: {
+    taxableIncome: number;
+    incomeTax: number;
+    consumptionTax: number;
+    totalTax: number;
+  };
+  totals: {
+    grossIncome: number;
+    netIncome: number;
+    effectiveTaxRate: number;
+  };
+}
