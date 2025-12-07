@@ -47,9 +47,9 @@
       "deductions": {
         "personal": { "amount": 12348 },
         "children": {
-          "type": "benefit_monthly",
+          "type": "per_child_year",
           "incomeLimit": null,
-          "rules": [{ "childIndex": "all", "amount": 250 }]
+          "rules": [{ "childIndex": "all", "amount": 9756 }]
         }
       },
       "consumptionTaxes": [{ "type": "vat", "rate": 0.19 }]

@@ -26,7 +26,7 @@ export interface PersonalDeduction {
 
 export type ChildrenDeductionType =
   | 'per_child_monthly'
-  | 'benefit_monthly'
+  | 'per_child_year'
   | 'none';
 
 export interface IncomeLimit {
@@ -84,14 +84,7 @@ export interface UserInputs {
 
 // ===== User Output =====
 export interface TaxesResult {
-  deductions: {
-    personal: number;
-    children: {
-      deduction: number;
-      benefit: number;
-    };
-    totalDeductions: number;
-  };
+  deductions: DeductionsResult;
   taxes: {
     taxableIncome: number;
     incomeTax: number;
@@ -103,4 +96,10 @@ export interface TaxesResult {
     netIncome: number;
     effectiveTaxRate: number;
   };
+}
+
+export interface DeductionsResult {
+  personal: number;
+  children: number;
+  totalDeductions: number;
 }
