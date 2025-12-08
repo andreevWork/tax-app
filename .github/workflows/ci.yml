@@ -68,14 +68,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-
       - name: Setup, build, and run E2E tests
         uses: ./.github/actions/setup-and-run
         with:
           script-name: 'e2e'
           command: |
+            npx playwright install --with-deps chromium
             npm run build
             npm run preview -- --port=5173 &
             npx wait-on http://localhost:5173
