@@ -5,7 +5,7 @@ import { delay } from '../utils/delay';
 const NETWORK_DELAY = 300;
 const data = taxData as CountriesData;
 
-export const getCountries = async (): Promise<Country[]> => {
+export async function getCountries(): Promise<Country[]> {
   await delay(NETWORK_DELAY);
   return data.countries;
-};
+}
