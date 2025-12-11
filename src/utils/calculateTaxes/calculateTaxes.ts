@@ -2,10 +2,10 @@ import type { Country, TaxesResult, UserInputs } from '../../types/taxes';
 import { calculateDeductions } from './calculateDeductions';
 import { calculateIncomeTax } from './calculateIncomeTax';
 
-export const calculateTaxes = (
+export function calculateTaxes(
   inputs: UserInputs,
   country: Country
-): TaxesResult => {
+): TaxesResult {
   const { gross } = inputs;
   const deductions = calculateDeductions(inputs, country);
   const taxableIncome = Math.max(0, gross - deductions.totalDeductions);
@@ -35,4 +35,4 @@ export const calculateTaxes = (
       effectiveTaxRate,
     },
   };
-};
+}
