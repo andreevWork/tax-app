@@ -75,8 +75,6 @@ jobs:
           command: |
             npx playwright install --with-deps chromium
             npm run build
-            npm run preview -- --port=5173 &
-            npx wait-on http://localhost:5173
             npm run test:e2e:ci
 
       - name: Upload Playwright report

@@ -8,6 +8,13 @@ export default defineConfig({
   workers: process.env.CI ? 2 : undefined,
   reporter: [['list'], ['html', { open: 'never' }]],
 
+  webServer: {
+    command: 'npm run preview -- --port=5173',
+    port: 5173,
+    timeout: 60_000,
+    reuseExistingServer: !process.env.CI,
+  },
+
   use: {
     baseURL: 'http://localhost:5173',
     headless: true,
