@@ -7,7 +7,7 @@ export function calculateTaxes(
   country: Country
 ): TaxesResult {
   const { gross } = inputs;
-  const deductions = calculateDeductions(inputs, country);
+  const deductions = calculateDeductions(inputs, country.deductions);
   const taxableIncome = Math.max(0, gross - deductions.totalDeductions);
   const incomeTax = calculateIncomeTax(taxableIncome, country.incomeTax);
   const consumptionTax = 0; // TODO
