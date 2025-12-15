@@ -4,7 +4,7 @@ export function calculateIncomeTax(
   taxableIncome: number,
   taxes: IncomeTax
 ): number {
-  if (taxes.type !== 'progressive') {
+  if (taxes.type === 'progressive') {
     let rest = taxableIncome;
     let tax = 0;
     let prevMax = 0;
