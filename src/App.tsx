@@ -1,10 +1,7 @@
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
-import { getCountries } from './api/countries';
 import AppCss from './App.module.css';
 import reactLogo from './assets/react.svg';
 import { useAppStore, useThemeStore, useUserStore } from './store';
-import type { Country, CountryCode } from './types/taxes';
 import viteLogo from '/vite.svg';
 
 function App() {
@@ -18,36 +15,6 @@ function App() {
     toggleSidebar,
     setLanguage,
   } = useThemeStore();
-
-  const [countries, setCountries] = useState<Country[]>([]);
-  const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const data = await getCountries();
-        setCountries(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    void loadData();
-  }, []);
-
-  console.log('currentCountry:', currentCountry);
-
-  const handleChangeCountry = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const code = event.target.value as CountryCode;
-    const country = countries.find((c) => c.countryCode === code) || null;
-    setCurrentCountry(country);
-  };
-
-  const countriesOptions = countries.map((country) => (
-    <option key={country.countryCode} value={country.countryCode}>
-      {country.name}
-    </option>
-  ));
 
   return (
     <>
@@ -64,26 +31,6 @@ function App() {
         </a>
       </div>
       <h1 data-testid="main-heading">Vite + React + Zustand</h1>
-      <div className={AppCss.card}>
-        <h2>Countries Selector</h2>
-        <p>
-          Selected Country:{' '}
-          {currentCountry ? currentCountry.name : 'Not selected'}
-        </p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
-          <select
-            id="country-select"
-            value={currentCountry?.countryCode ?? ''}
-            onChange={handleChangeCountry}
-            aria-label="Select a country"
-          >
-            <option value="" disabled>
-              Select a country
-            </option>
-            {countriesOptions}
-          </select>
-        </div>
-      </div>
 
       <div className={AppCss.card}>
         <h2>App State (example)</h2>
