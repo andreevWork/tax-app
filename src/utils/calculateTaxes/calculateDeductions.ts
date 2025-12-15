@@ -1,13 +1,17 @@
-import type { Country, DeductionsResult, UserInputs } from '../../types/taxes';
+import type {
+  Deductions,
+  DeductionsResult,
+  UserInputs,
+} from '../../types/taxes';
 import { calculateChildrenDeduction } from './calculateChildrenDeduction';
 
 export function calculateDeductions(
   inputs: UserInputs,
-  country: Country
+  deductions: Deductions
 ): DeductionsResult {
   const { gross, childrenCount, isMarried } = inputs;
 
-  const personalDeduction = country.deductions.personal.amount;
+  const personalDeduction = deductions.personal.amount;
   const personalDeductionTotal = isMarried
     ? 2 * personalDeduction
     : personalDeduction;
@@ -15,7 +19,7 @@ export function calculateDeductions(
   const childrenDeductionTotal = calculateChildrenDeduction(
     gross,
     childrenCount,
-    country.deductions.children
+    deductions.children
   );
 
   return {

@@ -47,6 +47,11 @@ export interface ChildrenDeduction {
   rules: ChildDeductionRule[];
 }
 
+export interface Deductions {
+  personal: PersonalDeduction;
+  children: ChildrenDeduction;
+}
+
 // ===== Consumption Taxes =====
 export type ConsumptionTaxType = 'vat';
 
@@ -62,10 +67,7 @@ export interface Country {
   currency: CountryCurrency;
 
   incomeTax: IncomeTax;
-  deductions: {
-    personal: PersonalDeduction;
-    children: ChildrenDeduction;
-  };
+  deductions: Deductions;
 
   consumptionTaxes: ConsumptionTax[];
 }
