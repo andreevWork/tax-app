@@ -69,6 +69,7 @@
         "personal": { "amount": 22800 },
         "children": {
           "type": "none",
+          "incomeLimit": null,
           "rules": []
         }
       },

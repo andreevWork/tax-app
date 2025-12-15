@@ -7,21 +7,25 @@ export function calculateChildrenDeduction(
 ): number {
   if (childrenDeductionConfig.type === 'none' || childrenCount === 0) return 0;
   let childrenDeductionTotal = 0;
+  const limitAmount = childrenDeductionConfig.incomeLimit?.amount;
 
   switch (childrenDeductionConfig.type) {
     case 'per_child_monthly': {
-      if (childrenDeductionConfig.incomeLimit) {
+      if (!limitAmount) {
+        childrenDeductionTotal +=
+          calcAmountPerMonth(childrenCount, childrenDeductionConfig.rules) * 12;
+      } else {
         childrenDeductionTotal += calcDeductionWithMonthlyLimit(
           gross,
           childrenCount,
-          childrenDeductionConfig.incomeLimit.amount,
+          limitAmount,
           childrenDeductionConfig.rules
         );
       }
       break;
     }
     case 'per_child_year': {
-      if (!childrenDeductionConfig.incomeLimit) {
+      if (!limitAmount || gross <= limitAmount) {
         childrenDeductionTotal += calcDeductionYear(
           childrenCount,
           childrenDeductionConfig.rules
@@ -42,15 +46,17 @@ function calcDeductionWithMonthlyLimit(
   incomeLimitAmount: number,
   rules: ChildDeductionRule[]
 ): number {
-  let deductionResult = 0;
   const grossPerMonth = gross / 12;
-  const monthsWithinLimit = incomeLimitAmount % grossPerMonth;
+  const monthsWithinLimit = Math.min(
+    12,
+    Math.floor(incomeLimitAmount / grossPerMonth)
+  );
+
+  if (monthsWithinLimit <= 0) return 0;
+
   const amountPerMonth = calcAmountPerMonth(childrenCount, rules);
 
-  for (let monthCount = 0; monthCount <= monthsWithinLimit; monthCount++) {
-    deductionResult += amountPerMonth;
-  }
-  return deductionResult;
+  return amountPerMonth * monthsWithinLimit;
 }
 
 function calcAmountPerMonth(
@@ -73,11 +79,17 @@ function calcDeductionYear(
   childrenCount: number,
   rules: ChildDeductionRule[]
 ): number {
-  let amount = 0;
+  let totalAmount = 0;
   const ruleForAll = rules.find((r) => r.childIndex === 'all');
-  if (ruleForAll) {
-    amount = childrenCount * ruleForAll.amount;
+  for (let childNum = 1; childNum <= childrenCount; childNum++) {
+    const specificRule = rules.find((r) => r.childIndex === childNum);
+
+    if (specificRule) {
+      totalAmount += specificRule.amount;
+    } else if (ruleForAll) {
+      totalAmount += ruleForAll.amount;
+    }
   }
 
-  return amount;
+  return totalAmount;
 }
