@@ -38,7 +38,9 @@ jobs:
         with:
           script: |
             const previewUrl = `https://andreevWork.github.io/tax-app/devstand/PR-${{ github.event.pull_request.number }}/`;
-            const body = `🚀 **Devstand preview is available** [Open preview](${previewUrl}) This link shows the current UI state for this Pull Request.`;
+            const body = `🚀 **Devstand preview is available**
+            🔗 [Open preview](${previewUrl})
+            This link shows the current UI state for this Pull Request.`;
 
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
