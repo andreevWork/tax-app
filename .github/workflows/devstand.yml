@@ -22,7 +22,7 @@ jobs:
         uses: ./.github/actions/setup-and-run
         with:
           script-name: 'devstand'
-          command: 'BASE_PATH=/tax-app/ npm run build'
+          command: 'npm run build'
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
