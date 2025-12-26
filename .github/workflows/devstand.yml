@@ -18,7 +18,6 @@ jobs:
   devstand:
     name: 🚀 Devstand Deploy
     runs-on: ubuntu-latest
-    if: always()
 
     steps:
       - name: Checkout repository
