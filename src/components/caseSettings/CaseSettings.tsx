@@ -1,6 +1,6 @@
 import styles from './CaseSettings.module.css';
 
-export const CaseSettings = () => {
+export function CaseSettings() {
   return (
     <section className={styles.caseSettingsContainer}>
       <div className={styles.caseSettingsItem} />
@@ -8,4 +8,4 @@ export const CaseSettings = () => {
       <div className={styles.caseSettingsItem} />
     </section>
   );
-};
+}

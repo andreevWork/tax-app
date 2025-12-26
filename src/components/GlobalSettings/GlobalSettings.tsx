@@ -1,6 +1,6 @@
 import styles from './GlobalSettings.module.css';
 
-export const GlobalSettings = () => {
+export function GlobalSettings() {
   return (
     <nav className={styles.headerNavContainer}>
       <div className={`${styles.navItem} ${styles.item60}`} />
@@ -8,4 +8,4 @@ export const GlobalSettings = () => {
       <div className={`${styles.navItem} ${styles.item80}`} />
     </nav>
   );
-};
+}
