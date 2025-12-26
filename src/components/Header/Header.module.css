@@ -1,0 +1,16 @@
+.header {
+  height: 60px;
+  padding: 0 20px;
+  border-radius: 8px;
+  background: var(--gray-300);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logoContainer {
+  width: 120px;
+  height: 30px;
+  border-radius: 4px;
+  background: var(--gray-400);
+}
