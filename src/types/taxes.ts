@@ -41,11 +41,30 @@ export interface ChildDeductionRule {
   amount: number;
 }
 
-export interface ChildrenDeduction {
-  type: ChildrenDeductionType;
+// ===== Children Deduction (Discriminated Union) =====
+interface BaseChildrenDeduction {
   incomeLimit: IncomeLimit | null;
   rules: ChildDeductionRule[];
 }
+
+export interface PerChildMonthlyDeduction extends BaseChildrenDeduction {
+  type: 'per_child_monthly';
+}
+
+export interface PerChildYearDeduction extends BaseChildrenDeduction {
+  type: 'per_child_year';
+}
+
+export interface NoChildrenDeduction {
+  type: 'none';
+  incomeLimit: null;
+  rules: [];
+}
+
+export type ChildrenDeduction =
+  | PerChildMonthlyDeduction
+  | PerChildYearDeduction
+  | NoChildrenDeduction;
 
 export interface Deductions {
   personal: PersonalDeduction;
@@ -53,7 +72,7 @@ export interface Deductions {
 }
 
 // ===== Consumption Taxes =====
-export type ConsumptionTaxType = 'vat';
+export type ConsumptionTaxType = 'vat' | 'sales_tax' | 'gst';
 
 export interface ConsumptionTax {
   type: ConsumptionTaxType;

@@ -7,8 +7,7 @@
 
   // Enable ESLint auto-fix on save
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit",
-    "source.organizeImports": "explicit"
+    "source.fixAll.eslint": "explicit"
   },
 
   // Enable ESLint for TypeScript and React files

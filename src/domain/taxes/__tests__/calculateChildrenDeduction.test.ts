@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest';
+import { ChildrenDeductionCalculator } from '../deductions';
 import type { ChildrenDeduction } from '../../../types/taxes';
-import { calculateChildrenDeduction } from '../calculateChildrenDeduction';
 
-describe('calculateChildrenDeduction', () => {
+const calculator = new ChildrenDeductionCalculator();
+
+describe('ChildrenDeductionCalculator', () => {
   describe('base cases', () => {
     it('returns 0 when deduction type is "none"', () => {
-      const result = calculateChildrenDeduction(120_000, 2, {
+      const result = calculator.calculate(120_000, 2, {
         type: 'none',
         incomeLimit: null,
         rules: [],
@@ -15,7 +17,7 @@ describe('calculateChildrenDeduction', () => {
     });
 
     it('returns 0 when childrenCount is 0', () => {
-      const result = calculateChildrenDeduction(120_000, 0, {
+      const result = calculator.calculate(120_000, 0, {
         type: 'per_child_year',
         incomeLimit: null,
         rules: [{ childIndex: 'all', amount: 1000 }],
@@ -33,7 +35,7 @@ describe('calculateChildrenDeduction', () => {
         rules: [{ childIndex: 'all', amount: 9756 }],
       };
 
-      const result = calculateChildrenDeduction(100_000, 4, config);
+      const result = calculator.calculate(100_000, 4, config);
 
       expect(result).toBe(4 * 9756);
     });
@@ -45,7 +47,7 @@ describe('calculateChildrenDeduction', () => {
         rules: [{ childIndex: 'all', amount: 5000 }],
       };
 
-      const result = calculateChildrenDeduction(60_000, 2, config);
+      const result = calculator.calculate(60_000, 2, config);
 
       expect(result).toBe(0);
     });
@@ -57,7 +59,7 @@ describe('calculateChildrenDeduction', () => {
         rules: [{ childIndex: 'all', amount: 5000 }],
       };
 
-      const result = calculateChildrenDeduction(40_000, 2, config);
+      const result = calculator.calculate(40_000, 2, config);
 
       expect(result).toBe(10_000);
     });
@@ -69,7 +71,7 @@ describe('calculateChildrenDeduction', () => {
         rules: [{ childIndex: 1, amount: 200 }],
       };
 
-      const result = calculateChildrenDeduction(100_000, 4, config);
+      const result = calculator.calculate(100_000, 4, config);
 
       expect(result).toBe(200);
     });
@@ -86,7 +88,7 @@ describe('calculateChildrenDeduction', () => {
         ],
       };
 
-      const result = calculateChildrenDeduction(12_000, 3, config);
+      const result = calculator.calculate(12_000, 3, config);
 
       expect(result).toBe(12 * (200 + 300 + 300));
     });
@@ -101,7 +103,7 @@ describe('calculateChildrenDeduction', () => {
         ],
       };
 
-      const result = calculateChildrenDeduction(12_000, 3, config);
+      const result = calculator.calculate(12_000, 3, config);
 
       expect(result).toBe(12 * (200 + 300 + 300));
     });
@@ -113,23 +115,23 @@ describe('calculateChildrenDeduction', () => {
         rules: [{ childIndex: 1, amount: 300 }],
       };
 
-      const result = calculateChildrenDeduction(24_000, 1, config);
+      const result = calculator.calculate(24_000, 1, config);
 
       expect(result).toBe(0);
     });
   });
 
-  describe('invalid config', () => {
-    it('throws error for unknown deduction type', () => {
+  describe('unknown deduction type', () => {
+    it('returns 0 for unknown deduction type (graceful fallback)', () => {
       const config = {
         type: 'unknown',
         incomeLimit: null,
         rules: [],
       } as unknown as ChildrenDeduction;
 
-      expect(() => calculateChildrenDeduction(50_000, 2, config)).toThrow(
-        'Children Deduction Type is wrong'
-      );
+      const result = calculator.calculate(50_000, 2, config);
+
+      expect(result).toBe(0);
     });
   });
 });
