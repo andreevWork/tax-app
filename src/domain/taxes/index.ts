@@ -9,13 +9,6 @@ export type {
   IncomeTaxCalculatorPort,
 } from './ports';
 
-// Factories
-export {
-  TaxCalculatorFactory,
-  type CountryTaxConfig,
-  type TaxCalculatorFactoryOptions,
-} from './factories';
-
 // Deductions
 export {
   ChildrenDeductionCalculator,
