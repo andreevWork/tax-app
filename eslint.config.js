@@ -33,6 +33,15 @@ export default defineConfig(
         { allowConstantExport: true },
       ],
       'prettier/prettier': 'error',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "ExportNamedDeclaration > VariableDeclaration > VariableDeclarator[init.type='ArrowFunctionExpression']",
+          message:
+            'Exported functions should use function declarations, not arrow functions.',
+        },
+      ],
     },
   },
   {
