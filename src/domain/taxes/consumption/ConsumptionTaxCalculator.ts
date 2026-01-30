@@ -3,7 +3,6 @@ import type {
   ConsumptionTaxType,
   UserInputs,
 } from '../../../types/taxes';
-import type { ConsumptionTaxCalculatorPort } from '../ports';
 import {
   defaultConsumptionTaxStrategies,
   type ConsumptionTaxStrategy,
@@ -13,7 +12,7 @@ export interface ConsumptionTaxCalculatorOptions {
   strategies?: ConsumptionTaxStrategy[];
 }
 
-export class ConsumptionTaxCalculator implements ConsumptionTaxCalculatorPort {
+export class ConsumptionTaxCalculator {
   private readonly strategies: Map<ConsumptionTaxType, ConsumptionTaxStrategy>;
 
   constructor(options: ConsumptionTaxCalculatorOptions = {}) {

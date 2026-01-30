@@ -2,7 +2,6 @@ import type {
   ChildrenDeduction,
   ChildrenDeductionType,
 } from '../../../types/taxes';
-import type { ChildrenDeductionCalculatorPort } from '../ports';
 import {
   defaultChildrenDeductionStrategies,
   type ChildrenDeductionStrategy,
@@ -12,9 +11,7 @@ export interface ChildrenDeductionCalculatorOptions {
   strategies?: ChildrenDeductionStrategy[];
 }
 
-export class ChildrenDeductionCalculator
-  implements ChildrenDeductionCalculatorPort
-{
+export class ChildrenDeductionCalculator {
   private readonly strategies: Map<
     ChildrenDeductionType,
     ChildrenDeductionStrategy

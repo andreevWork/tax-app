@@ -27,9 +27,7 @@ describe('DeductionCalculator', () => {
   };
 
   const childrenCalculator = new ChildrenDeductionCalculator();
-  const calculator = new DeductionCalculator({
-    childrenDeductionCalculator: childrenCalculator,
-  });
+  const calculator = new DeductionCalculator(childrenCalculator);
 
   it('calculates deductions for unmarried user', () => {
     vi.spyOn(childrenCalculator, 'calculate').mockReturnValue(5_000);

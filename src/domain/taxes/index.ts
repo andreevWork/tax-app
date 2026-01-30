@@ -1,13 +1,5 @@
 // Main calculator
-export { TaxCalculator, type TaxCalculatorDependencies } from './TaxCalculator';
-
-// Ports
-export type {
-  ChildrenDeductionCalculatorPort,
-  ConsumptionTaxCalculatorPort,
-  DeductionCalculatorPort,
-  IncomeTaxCalculatorPort,
-} from './ports';
+export { TaxCalculator } from './TaxCalculator';
 
 // Deductions
 export {
@@ -19,7 +11,6 @@ export {
   PerChildYearStrategy,
   type ChildrenDeductionCalculatorOptions,
   type ChildrenDeductionStrategy,
-  type DeductionCalculatorOptions,
 } from './deductions';
 
 // Income Tax

@@ -3,22 +3,14 @@ import type {
   DeductionsResult,
   UserInputs,
 } from '../../../types/taxes';
-import type {
-  ChildrenDeductionCalculatorPort,
-  DeductionCalculatorPort,
-} from '../ports';
 import { ChildrenDeductionCalculator } from './ChildrenDeductionCalculator';
 
-export interface DeductionCalculatorOptions {
-  childrenDeductionCalculator?: ChildrenDeductionCalculatorPort;
-}
+export class DeductionCalculator {
+  private readonly childrenDeductionCalculator: ChildrenDeductionCalculator;
 
-export class DeductionCalculator implements DeductionCalculatorPort {
-  private readonly childrenDeductionCalculator: ChildrenDeductionCalculatorPort;
-
-  constructor(options: DeductionCalculatorOptions = {}) {
+  constructor(childrenDeductionCalculator?: ChildrenDeductionCalculator) {
     this.childrenDeductionCalculator =
-      options.childrenDeductionCalculator ?? new ChildrenDeductionCalculator();
+      childrenDeductionCalculator ?? new ChildrenDeductionCalculator();
   }
 
   calculate(inputs: UserInputs, deductions: Deductions): DeductionsResult {

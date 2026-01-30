@@ -2,30 +2,20 @@ import type { Country, TaxesResult, UserInputs } from '../../types/taxes';
 import { ConsumptionTaxCalculator } from './consumption';
 import { DeductionCalculator } from './deductions';
 import { IncomeTaxCalculator } from './income';
-import type {
-  ConsumptionTaxCalculatorPort,
-  DeductionCalculatorPort,
-  IncomeTaxCalculatorPort,
-} from './ports';
-
-export interface TaxCalculatorDependencies {
-  deductionCalculator?: DeductionCalculatorPort;
-  incomeTaxCalculator?: IncomeTaxCalculatorPort;
-  consumptionTaxCalculator?: ConsumptionTaxCalculatorPort;
-}
 
 export class TaxCalculator {
-  private readonly deductionCalculator: DeductionCalculatorPort;
-  private readonly incomeTaxCalculator: IncomeTaxCalculatorPort;
-  private readonly consumptionTaxCalculator: ConsumptionTaxCalculatorPort;
+  private readonly deductionCalculator: DeductionCalculator;
+  private readonly incomeTaxCalculator: IncomeTaxCalculator;
+  private readonly consumptionTaxCalculator: ConsumptionTaxCalculator;
 
-  constructor(dependencies: TaxCalculatorDependencies = {}) {
-    this.deductionCalculator =
-      dependencies.deductionCalculator ?? new DeductionCalculator();
-    this.incomeTaxCalculator =
-      dependencies.incomeTaxCalculator ?? new IncomeTaxCalculator();
-    this.consumptionTaxCalculator =
-      dependencies.consumptionTaxCalculator ?? new ConsumptionTaxCalculator();
+  constructor(
+    deductionCalculator: DeductionCalculator,
+    incomeTaxCalculator: IncomeTaxCalculator,
+    consumptionTaxCalculator: ConsumptionTaxCalculator
+  ) {
+    this.deductionCalculator = deductionCalculator;
+    this.incomeTaxCalculator = incomeTaxCalculator;
+    this.consumptionTaxCalculator = consumptionTaxCalculator;
   }
 
   calculate(inputs: UserInputs, country: Country): TaxesResult {

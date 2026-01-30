@@ -1,5 +1,4 @@
 import type { IncomeTax, IncomeTaxType } from '../../../types/taxes';
-import type { IncomeTaxCalculatorPort } from '../ports';
 import {
   defaultIncomeTaxStrategies,
   type IncomeTaxStrategy,
@@ -9,7 +8,7 @@ export interface IncomeTaxCalculatorOptions {
   strategies?: IncomeTaxStrategy[];
 }
 
-export class IncomeTaxCalculator implements IncomeTaxCalculatorPort {
+export class IncomeTaxCalculator {
   private readonly strategies: Map<IncomeTaxType, IncomeTaxStrategy>;
 
   constructor(options: IncomeTaxCalculatorOptions = {}) {
