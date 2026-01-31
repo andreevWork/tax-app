@@ -1,8 +1,5 @@
-import type {
-  Deductions,
-  DeductionsResult,
-  UserInputs,
-} from '../../../types/taxes';
+import type { CalculatorInput } from '../types';
+import type { Deductions, DeductionsResult } from './types';
 import { ChildrenDeductionCalculator } from './ChildrenDeductionCalculator';
 
 export class DeductionCalculator {
@@ -13,7 +10,7 @@ export class DeductionCalculator {
       childrenDeductionCalculator ?? new ChildrenDeductionCalculator();
   }
 
-  calculate(inputs: UserInputs, deductions: Deductions): DeductionsResult {
+  calculate(inputs: CalculatorInput, deductions: Deductions): DeductionsResult {
     const { gross, childrenCount, isMarried } = inputs;
 
     const personalDeduction = deductions.personal.amount;

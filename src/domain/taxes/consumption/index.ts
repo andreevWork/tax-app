@@ -8,3 +8,5 @@ export {
   VatStrategy,
   type ConsumptionTaxStrategy,
 } from './strategies';
+
+export type { ConsumptionTax, ConsumptionTaxType } from './types';

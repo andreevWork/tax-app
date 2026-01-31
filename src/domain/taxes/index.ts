@@ -1,6 +1,14 @@
 // Main calculator
 export { TaxCalculator } from './TaxCalculator';
 
+// Domain types
+export type {
+  CountryTaxConfig,
+  CountryCode,
+  CountryCurrency,
+  CountryName,
+} from './types';
+
 // Deductions
 export {
   ChildrenDeductionCalculator,
@@ -9,8 +17,20 @@ export {
   NoneStrategy,
   PerChildMonthlyStrategy,
   PerChildYearStrategy,
+  type ChildDeductionRule,
+  type ChildIndex,
+  type ChildrenDeduction,
   type ChildrenDeductionCalculatorOptions,
   type ChildrenDeductionStrategy,
+  type ChildrenDeductionType,
+  type Deductions,
+  type DeductionsResult,
+  type IncomeLimit,
+  type NoChildrenDeduction,
+  type PerChildMonthlyDeduction,
+  type PerChildYearDeduction,
+  type Period,
+  type PersonalDeduction,
 } from './deductions';
 
 // Income Tax
@@ -19,8 +39,11 @@ export {
   FlatStrategy,
   IncomeTaxCalculator,
   ProgressiveStrategy,
+  type IncomeTax,
   type IncomeTaxCalculatorOptions,
   type IncomeTaxStrategy,
+  type IncomeTaxType,
+  type TaxBracket,
 } from './income';
 
 // Consumption Tax
@@ -30,18 +53,16 @@ export {
   GstStrategy,
   SalesTaxStrategy,
   VatStrategy,
+  type ConsumptionTax,
   type ConsumptionTaxCalculatorOptions,
   type ConsumptionTaxStrategy,
+  type ConsumptionTaxType,
 } from './consumption';
 
 // Schemas
 export {
-  countriesDataSchema,
   countrySchema,
-  safeValidateCountriesData,
   safeValidateCountry,
-  validateCountriesData,
   validateCountry,
-  type ValidatedCountriesData,
   type ValidatedCountry,
 } from './schemas/countrySchema';

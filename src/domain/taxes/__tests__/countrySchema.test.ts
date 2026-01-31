@@ -1,11 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   validateCountry,
-  validateCountriesData,
   safeValidateCountry,
-  safeValidateCountriesData,
   countrySchema,
-  countriesDataSchema,
 } from '../schemas/countrySchema';
 
 describe('countrySchema', () => {
@@ -86,19 +83,6 @@ describe('countrySchema', () => {
     });
   });
 
-  describe('validateCountriesData', () => {
-    it('validates correct countries data', () => {
-      const result = validateCountriesData({ countries: [validCountry] });
-
-      expect(result.countries).toHaveLength(1);
-      expect(result.countries[0].countryCode).toBe('DE');
-    });
-
-    it('throws on empty countries array', () => {
-      expect(() => validateCountriesData({ countries: [] })).toThrow();
-    });
-  });
-
   describe('safeValidateCountry', () => {
     it('returns success for valid data', () => {
       const result = safeValidateCountry(validCountry);
@@ -116,20 +100,6 @@ describe('countrySchema', () => {
       if (!result.success) {
         expect(result.error).toBeDefined();
       }
-    });
-  });
-
-  describe('safeValidateCountriesData', () => {
-    it('returns success for valid data', () => {
-      const result = safeValidateCountriesData({ countries: [validCountry] });
-
-      expect(result.success).toBe(true);
-    });
-
-    it('returns error for invalid data', () => {
-      const result = safeValidateCountriesData({ countries: [] });
-
-      expect(result.success).toBe(false);
     });
   });
 
@@ -221,11 +191,6 @@ describe('countrySchema', () => {
     it('exports countrySchema', () => {
       expect(countrySchema).toBeDefined();
       expect(typeof countrySchema.parse).toBe('function');
-    });
-
-    it('exports countriesDataSchema', () => {
-      expect(countriesDataSchema).toBeDefined();
-      expect(typeof countriesDataSchema.parse).toBe('function');
     });
   });
 });

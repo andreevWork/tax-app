@@ -1,4 +1,4 @@
-import type { IncomeTax } from '../../../../types/taxes';
+import type { IncomeTax } from '../types';
 import type { IncomeTaxStrategy } from './types';
 
 export class FlatStrategy implements IncomeTaxStrategy {

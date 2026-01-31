@@ -1,4 +1,5 @@
-import type { Country, TaxesResult, UserInputs } from '../../types/taxes';
+import type { TaxesResult, CalculatorInput } from './types';
+import type { CountryTaxConfig } from './types';
 import { ConsumptionTaxCalculator } from './consumption';
 import { DeductionCalculator } from './deductions';
 import { IncomeTaxCalculator } from './income';
@@ -18,7 +19,7 @@ export class TaxCalculator {
     this.consumptionTaxCalculator = consumptionTaxCalculator;
   }
 
-  calculate(inputs: UserInputs, country: Country): TaxesResult {
+  calculate(inputs: CalculatorInput, country: CountryTaxConfig): TaxesResult {
     const deductions = this.deductionCalculator.calculate(
       inputs,
       country.deductions

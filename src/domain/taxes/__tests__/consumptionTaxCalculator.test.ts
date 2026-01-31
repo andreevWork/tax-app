@@ -5,12 +5,13 @@ import {
   SalesTaxStrategy,
   VatStrategy,
 } from '../consumption';
-import type { ConsumptionTax, UserInputs } from '../../../types/taxes';
+import type { CalculatorInput } from '../types';
+import type { ConsumptionTax } from '../consumption/types';
 
 describe('ConsumptionTaxCalculator', () => {
   const calculator = new ConsumptionTaxCalculator();
 
-  const baseInputs: UserInputs = {
+  const baseInputs: CalculatorInput = {
     gross: 100_000,
     childrenCount: 0,
     isMarried: false,
@@ -25,14 +26,14 @@ describe('ConsumptionTaxCalculator', () => {
     });
 
     it('handles zero consumption', () => {
-      const inputs: UserInputs = { ...baseInputs, consumption: 0 };
+      const inputs: CalculatorInput = { ...baseInputs, consumption: 0 };
       const taxes: ConsumptionTax[] = [{ type: 'vat', rate: 0.2 }];
       const result = calculator.calculate(inputs, taxes);
       expect(result).toBe(0);
     });
 
     it('handles undefined consumption', () => {
-      const inputs: UserInputs = {
+      const inputs: CalculatorInput = {
         gross: 100_000,
         childrenCount: 0,
         isMarried: false,
@@ -113,7 +114,7 @@ describe('ConsumptionTaxCalculator', () => {
 });
 
 describe('Consumption Tax Strategies', () => {
-  const baseInputs: UserInputs = {
+  const baseInputs: CalculatorInput = {
     gross: 100_000,
     childrenCount: 0,
     isMarried: false,

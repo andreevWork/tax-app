@@ -4,7 +4,8 @@ import {
   DeductionCalculator,
   PerChildMonthlyStrategy,
 } from '../deductions';
-import type { Deductions, UserInputs } from '../../../types/taxes';
+import type { CalculatorInput } from '../types';
+import type { Deductions } from '../deductions/types';
 
 describe('DeductionCalculator', () => {
   beforeEach(() => {
@@ -20,7 +21,7 @@ describe('DeductionCalculator', () => {
     },
   };
 
-  const baseInputs: UserInputs = {
+  const baseInputs: CalculatorInput = {
     gross: 100_000,
     childrenCount: 2,
     isMarried: false,

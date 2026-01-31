@@ -9,3 +9,18 @@ export {
   PerChildYearStrategy,
   type ChildrenDeductionStrategy,
 } from './strategies';
+
+export type {
+  ChildDeductionRule,
+  ChildIndex,
+  ChildrenDeduction,
+  ChildrenDeductionType,
+  Deductions,
+  DeductionsResult,
+  IncomeLimit,
+  NoChildrenDeduction,
+  PerChildMonthlyDeduction,
+  PerChildYearDeduction,
+  Period,
+  PersonalDeduction,
+} from './types';

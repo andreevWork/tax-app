@@ -1,4 +1,4 @@
-import type { IncomeTax, IncomeTaxType } from '../../../../types/taxes';
+import type { IncomeTax, IncomeTaxType } from '../types';
 
 export interface IncomeTaxStrategy {
   readonly type: IncomeTaxType;

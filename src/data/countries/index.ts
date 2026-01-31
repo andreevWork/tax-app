@@ -1,6 +1,11 @@
-import type { Country, CountryCode } from '../../types/taxes';
+import { COUNTRIES } from '../../constants/countries';
+import type { CountryTaxConfig, CountryCode } from '../../domain/taxes';
 
-export { AVAILABLE_COUNTRIES, type CountryMetadata } from './metadata';
+// Generate available countries list from COUNTRIES constant
+export const AVAILABLE_COUNTRIES = Object.values(COUNTRIES);
+
+// Type for country metadata (used in UI selectors)
+export type CountryMetadata = (typeof AVAILABLE_COUNTRIES)[number];
 
 const countryFileMap: Record<CountryCode, string> = {
   RU: 'russia',
@@ -12,7 +17,9 @@ const countryFileMap: Record<CountryCode, string> = {
  * Vite glob import - explicitly tells bundler which files can be loaded.
  * This creates optimized chunks for each country file.
  */
-const countryModules = import.meta.glob<{ default: Country }>('./*.json');
+const countryModules = import.meta.glob<{ default: CountryTaxConfig }>(
+  './*.json'
+);
 
 /**
  * Dynamically loads country configuration by country code.
@@ -22,7 +29,9 @@ const countryModules = import.meta.glob<{ default: Country }>('./*.json');
  * @returns Promise with country configuration
  * @throws Error if country code is unknown or file loading fails
  */
-export async function loadCountryByCode(code: CountryCode): Promise<Country> {
+export async function loadCountryByCode(
+  code: CountryCode
+): Promise<CountryTaxConfig> {
   const fileName = countryFileMap[code];
 
   if (!fileName) {

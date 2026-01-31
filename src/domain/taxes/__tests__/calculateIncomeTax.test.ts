@@ -4,7 +4,7 @@ import {
   IncomeTaxCalculator,
   ProgressiveStrategy,
 } from '../income';
-import type { IncomeTax } from '../../../types/taxes';
+import type { IncomeTax } from '../income/types';
 
 const calculator = new IncomeTaxCalculator();
 

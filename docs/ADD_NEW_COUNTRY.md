@@ -1,6 +1,6 @@
 # How to Add a New Country
 
-## Quick Start (3 Steps)
+## Quick Start (2 Steps)
 
 ### 1. Add Country Constant
 
@@ -16,7 +16,7 @@ export const COUNTRIES = {
 } as const;
 ```
 
-### 2. Create Country Data File
+### 2. Create Country Data File and Register Mapping
 
 📍 `src/data/countries/usa.json`
 
@@ -31,20 +31,6 @@ export const COUNTRIES = {
 }
 ```
 
-### 3. Register Country in Metadata
-
-📍 `src/data/countries/metadata.ts`
-
-```typescript
-export const AVAILABLE_COUNTRIES: CountryMetadata[] = [
-  { code: 'RU', name: 'Russia', currency: 'RUB' },
-  { code: 'DE', name: 'Germany', currency: 'EUR' },
-  { code: 'RS', name: 'Serbia', currency: 'RSD' },
-  // ← Add new country
-  { code: 'US', name: 'United States', currency: 'USD' },
-];
-```
-
 📍 `src/data/countries/index.ts`
 
 ```typescript
@@ -57,7 +43,7 @@ const countryFileMap: Record<CountryCode, string> = {
 };
 ```
 
-That's it! The country will be automatically loaded on demand when selected.
+That's it! The country will automatically appear in the selector and load on demand when selected.
 
 ---
 
@@ -204,13 +190,7 @@ US: { countryCode: 'US', name: 'United States', currency: 'USD' },
 }
 ```
 
-### 3. Metadata & Mapping
-
-📍 `src/data/countries/metadata.ts`
-
-```typescript
-{ code: 'US', name: 'United States', currency: 'USD' },
-```
+### 3. Mapping
 
 📍 `src/data/countries/index.ts`
 
@@ -227,14 +207,14 @@ const countryFileMap: Record<CountryCode, string> = {
 
 Countries are loaded **dynamically on demand**:
 
-1. On app start, only metadata (code, name, currency) is loaded for the country selector
-2. When user selects a country, its full configuration is loaded from a separate chunk
+1. `COUNTRIES` constant provides metadata (code, name, currency) for the country selector — available instantly
+2. When user selects a country, its full tax configuration is loaded from a separate JSON chunk
 3. Each country file is bundled separately (~0.5 KB each)
 
 This approach:
 
-- ✅ Reduces initial bundle size
-- ✅ Loads only what's needed
+- ✅ Instant country list (no loading state)
+- ✅ Loads tax configs only when needed
 - ✅ Scales to hundreds of countries
 
 ---
@@ -257,7 +237,7 @@ ZodError: [
 
 If you need a new `type` (e.g., `"cantonal"` for Switzerland):
 
-1. Add type to `src/types/taxes.ts`:
+1. Add type to `src/domain/taxes/income/types.ts`:
 
    ```typescript
    export type IncomeTaxType = 'progressive' | 'flat' | 'cantonal';

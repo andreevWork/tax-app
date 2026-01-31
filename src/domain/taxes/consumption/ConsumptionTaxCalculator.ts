@@ -1,8 +1,5 @@
-import type {
-  ConsumptionTax,
-  ConsumptionTaxType,
-  UserInputs,
-} from '../../../types/taxes';
+import type { CalculatorInput } from '../types';
+import type { ConsumptionTax, ConsumptionTaxType } from './types';
 import {
   defaultConsumptionTaxStrategies,
   type ConsumptionTaxStrategy,
@@ -20,7 +17,10 @@ export class ConsumptionTaxCalculator {
     this.strategies = new Map(strategies.map((s) => [s.type, s]));
   }
 
-  calculate(inputs: UserInputs, consumptionTaxes: ConsumptionTax[]): number {
+  calculate(
+    inputs: CalculatorInput,
+    consumptionTaxes: ConsumptionTax[]
+  ): number {
     if (!consumptionTaxes.length) return 0;
 
     return consumptionTaxes.reduce((total, tax) => {

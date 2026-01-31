@@ -7,3 +7,5 @@ export {
   ProgressiveStrategy,
   type IncomeTaxStrategy,
 } from './strategies';
+
+export type { IncomeTax, IncomeTaxType, TaxBracket } from './types';

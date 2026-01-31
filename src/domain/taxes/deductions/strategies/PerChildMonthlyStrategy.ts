@@ -1,7 +1,4 @@
-import type {
-  ChildDeductionRule,
-  ChildrenDeduction,
-} from '../../../../types/taxes';
+import type { ChildDeductionRule, ChildrenDeduction } from '../types';
 import type { ChildrenDeductionStrategy } from './types';
 
 export class PerChildMonthlyStrategy implements ChildrenDeductionStrategy {

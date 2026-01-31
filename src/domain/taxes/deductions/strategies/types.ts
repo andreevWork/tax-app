@@ -2,7 +2,7 @@ import type {
   ChildDeductionRule,
   ChildrenDeduction,
   ChildrenDeductionType,
-} from '../../../../types/taxes';
+} from '../types';
 
 export interface ChildrenDeductionStrategy {
   readonly type: ChildrenDeductionType;

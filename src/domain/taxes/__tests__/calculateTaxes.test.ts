@@ -5,13 +5,14 @@ import {
   IncomeTaxCalculator,
   TaxCalculator,
 } from '..';
-import type { Country, UserInputs } from '../../../types/taxes';
+import type { CalculatorInput } from '../types';
+import type { CountryTaxConfig } from '../types';
 
 describe('TaxCalculator', () => {
-  const mockCountry: Country = {
-    countryCode: 'XX' as Country['countryCode'],
-    name: 'Testland' as Country['name'],
-    currency: 'USD' as Country['currency'],
+  const mockCountry: CountryTaxConfig = {
+    countryCode: 'XX' as CountryTaxConfig['countryCode'],
+    name: 'Testland' as CountryTaxConfig['name'],
+    currency: 'USD' as CountryTaxConfig['currency'],
     deductions: {
       personal: { amount: 5000 },
       children: { type: 'none', incomeLimit: null, rules: [] },
@@ -35,7 +36,7 @@ describe('TaxCalculator', () => {
       new ConsumptionTaxCalculator()
     );
 
-    const inputs: UserInputs = {
+    const inputs: CalculatorInput = {
       gross: 100_000,
       childrenCount: 0,
       isMarried: false,
@@ -68,7 +69,7 @@ describe('TaxCalculator', () => {
       new ConsumptionTaxCalculator()
     );
 
-    const inputs: UserInputs = {
+    const inputs: CalculatorInput = {
       gross: 50_000,
       childrenCount: 0,
       isMarried: true,
@@ -88,7 +89,7 @@ describe('TaxCalculator', () => {
       new ConsumptionTaxCalculator()
     );
 
-    const inputs: UserInputs = {
+    const inputs: CalculatorInput = {
       gross: 2_000,
       childrenCount: 0,
       isMarried: true, // 2 * 5000 = 10000 deduction
@@ -108,7 +109,7 @@ describe('TaxCalculator', () => {
       new ConsumptionTaxCalculator()
     );
 
-    const inputs: UserInputs = {
+    const inputs: CalculatorInput = {
       gross: 0,
       childrenCount: 0,
       isMarried: false,

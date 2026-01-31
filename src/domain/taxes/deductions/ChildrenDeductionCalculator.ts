@@ -1,7 +1,4 @@
-import type {
-  ChildrenDeduction,
-  ChildrenDeductionType,
-} from '../../../types/taxes';
+import type { ChildrenDeduction, ChildrenDeductionType } from './types';
 import {
   defaultChildrenDeductionStrategies,
   type ChildrenDeductionStrategy,

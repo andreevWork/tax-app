@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ChildrenDeductionCalculator } from '../deductions';
-import type { ChildrenDeduction } from '../../../types/taxes';
+import type { ChildrenDeduction } from '../deductions/types';
 
 const calculator = new ChildrenDeductionCalculator();
 

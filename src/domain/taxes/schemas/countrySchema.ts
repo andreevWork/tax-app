@@ -70,27 +70,14 @@ export const countrySchema = z.object({
   consumptionTaxes: z.array(consumptionTaxSchema),
 });
 
-export const countriesDataSchema = z.object({
-  countries: z.array(countrySchema).min(1),
-});
-
 // ===== Type exports inferred from schemas =====
 export type ValidatedCountry = z.infer<typeof countrySchema>;
-export type ValidatedCountriesData = z.infer<typeof countriesDataSchema>;
 
 // ===== Validation functions =====
 export function validateCountry(data: unknown): ValidatedCountry {
   return countrySchema.parse(data);
 }
 
-export function validateCountriesData(data: unknown): ValidatedCountriesData {
-  return countriesDataSchema.parse(data);
-}
-
 export function safeValidateCountry(data: unknown) {
   return countrySchema.safeParse(data);
-}
-
-export function safeValidateCountriesData(data: unknown) {
-  return countriesDataSchema.safeParse(data);
 }
