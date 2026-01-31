@@ -1,6 +1,6 @@
 # How to Add a New Country
 
-## Quick Start (2 Steps)
+## Quick Start (3 Steps)
 
 ### 1. Add Country Constant
 
@@ -16,9 +16,9 @@ export const COUNTRIES = {
 } as const;
 ```
 
-### 2. Add Country Data
+### 2. Create Country Data File
 
-📍 `src/data/tax.data.json`
+📍 `src/data/countries/usa.json`
 
 ```json
 {
@@ -30,6 +30,34 @@ export const COUNTRIES = {
   "consumptionTaxes": [ ... ]
 }
 ```
+
+### 3. Register Country in Metadata
+
+📍 `src/data/countries/metadata.ts`
+
+```typescript
+export const AVAILABLE_COUNTRIES: CountryMetadata[] = [
+  { code: 'RU', name: 'Russia', currency: 'RUB' },
+  { code: 'DE', name: 'Germany', currency: 'EUR' },
+  { code: 'RS', name: 'Serbia', currency: 'RSD' },
+  // ← Add new country
+  { code: 'US', name: 'United States', currency: 'USD' },
+];
+```
+
+📍 `src/data/countries/index.ts`
+
+```typescript
+const countryFileMap: Record<CountryCode, string> = {
+  RU: 'russia',
+  DE: 'germany',
+  RS: 'serbia',
+  // ← Add mapping
+  US: 'usa',
+};
+```
+
+That's it! The country will be automatically loaded on demand when selected.
 
 ---
 
@@ -137,12 +165,15 @@ Supported types: `vat`, `sales_tax`, `gst`
 
 ### 1. Constant
 
+📍 `src/constants/countries.ts`
+
 ```typescript
-// src/constants/countries.ts
 US: { countryCode: 'US', name: 'United States', currency: 'USD' },
 ```
 
-### 2. Data
+### 2. Data File
+
+📍 `src/data/countries/usa.json`
 
 ```json
 {
@@ -172,6 +203,39 @@ US: { countryCode: 'US', name: 'United States', currency: 'USD' },
   "consumptionTaxes": [{ "type": "sales_tax", "rate": 0.0 }]
 }
 ```
+
+### 3. Metadata & Mapping
+
+📍 `src/data/countries/metadata.ts`
+
+```typescript
+{ code: 'US', name: 'United States', currency: 'USD' },
+```
+
+📍 `src/data/countries/index.ts`
+
+```typescript
+const countryFileMap: Record<CountryCode, string> = {
+  // ...existing countries
+  US: 'usa',
+};
+```
+
+---
+
+## How It Works
+
+Countries are loaded **dynamically on demand**:
+
+1. On app start, only metadata (code, name, currency) is loaded for the country selector
+2. When user selects a country, its full configuration is loaded from a separate chunk
+3. Each country file is bundled separately (~0.5 KB each)
+
+This approach:
+
+- ✅ Reduces initial bundle size
+- ✅ Loads only what's needed
+- ✅ Scales to hundreds of countries
 
 ---
 

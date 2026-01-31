@@ -1,44 +1,60 @@
 import { create } from 'zustand';
 import type { Country, CountryCode } from '../../types/taxes';
-import { getCountries } from '../../api/countries';
+import type { CountryMetadata } from '../../data/countries';
+import { getAvailableCountries, getCountryByCode } from '../../api/countries';
 
 interface CountryState {
-  countries: Country[];
+  availableCountries: CountryMetadata[];
+  selectedCountry: Country | null;
   selectedCountryCode: CountryCode | null;
   isLoading: boolean;
+  isLoadingCountry: boolean;
   error: string | null;
 
-  fetchCountries: () => Promise<void>;
-  selectCountry: (code: CountryCode) => void;
-  getSelectedCountry: () => Country | undefined;
+  fetchAvailableCountries: () => Promise<void>;
+  selectCountry: (code: CountryCode) => Promise<void>;
 }
 
 export const useCountryStore = create<CountryState>((set, get) => ({
-  countries: [],
+  availableCountries: [],
+  selectedCountry: null,
   selectedCountryCode: null,
   isLoading: false,
+  isLoadingCountry: false,
   error: null,
 
-  fetchCountries: async () => {
+  fetchAvailableCountries: async () => {
     set({ isLoading: true, error: null });
     try {
-      const countries = await getCountries();
+      const countries = await getAvailableCountries();
       set({
-        countries,
+        availableCountries: countries,
         isLoading: false,
-        selectedCountryCode: countries[0]?.countryCode ?? null,
       });
+
+      // Auto-select first country (fire and forget)
+      if (countries.length > 0) {
+        void get().selectCountry(countries[0].code);
+      }
     } catch {
       set({ error: 'Failed to load countries', isLoading: false });
     }
   },
 
-  selectCountry: (code: CountryCode) => {
-    set({ selectedCountryCode: code });
-  },
-
-  getSelectedCountry: () => {
-    const { countries, selectedCountryCode } = get();
-    return countries.find((c) => c.countryCode === selectedCountryCode);
+  selectCountry: async (code: CountryCode) => {
+    set({ isLoadingCountry: true, error: null, selectedCountryCode: code });
+    try {
+      const country = await getCountryByCode(code);
+      set({
+        selectedCountry: country,
+        isLoadingCountry: false,
+      });
+    } catch {
+      set({
+        error: `Failed to load country: ${code}`,
+        isLoadingCountry: false,
+        selectedCountry: null,
+      });
+    }
   },
 }));

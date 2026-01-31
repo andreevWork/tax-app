@@ -2,9 +2,7 @@ import { useCountryStore } from '../../store';
 import styles from './TaxChart.module.css';
 
 export function TaxChart() {
-  const selectedCountry = useCountryStore((state) =>
-    state.getSelectedCountry()
-  );
+  const selectedCountry = useCountryStore((state) => state.selectedCountry);
 
   return (
     <section className={styles.taxChartContainer}>

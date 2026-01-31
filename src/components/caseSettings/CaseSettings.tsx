@@ -5,19 +5,20 @@ import styles from './CaseSettings.module.css';
 
 export function CaseSettings() {
   const {
-    countries,
+    availableCountries,
     selectedCountryCode,
     isLoading,
-    fetchCountries,
+    isLoadingCountry,
+    fetchAvailableCountries,
     selectCountry,
   } = useCountryStore();
 
   useEffect(() => {
-    void fetchCountries();
-  }, [fetchCountries]);
+    void fetchAvailableCountries();
+  }, [fetchAvailableCountries]);
 
   function handleCountryChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    selectCountry(event.target.value as CountryCode);
+    void selectCountry(event.target.value as CountryCode);
   }
 
   return (
@@ -28,11 +29,11 @@ export function CaseSettings() {
           id="country-select"
           value={selectedCountryCode ?? ''}
           onChange={handleCountryChange}
-          disabled={isLoading}
+          disabled={isLoading || isLoadingCountry}
         >
           {isLoading && <option>Loading...</option>}
-          {countries.map((country) => (
-            <option key={country.countryCode} value={country.countryCode}>
+          {availableCountries.map((country) => (
+            <option key={country.code} value={country.code}>
               {country.name}
             </option>
           ))}

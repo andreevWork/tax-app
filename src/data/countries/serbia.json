@@ -1,0 +1,21 @@
+{
+  "countryCode": "RS",
+  "name": "Serbia",
+  "currency": "RSD",
+  "incomeTax": {
+    "type": "progressive",
+    "brackets": [
+      { "max": 684000, "rate": 0.1 },
+      { "max": null, "rate": 0.15 }
+    ]
+  },
+  "deductions": {
+    "personal": { "amount": 22800 },
+    "children": {
+      "type": "none",
+      "incomeLimit": null,
+      "rules": []
+    }
+  },
+  "consumptionTaxes": [{ "type": "vat", "rate": 0.2 }]
+}

@@ -1,0 +1,25 @@
+{
+  "countryCode": "DE",
+  "name": "Germany",
+  "currency": "EUR",
+  "incomeTax": {
+    "type": "progressive",
+    "brackets": [
+      { "max": 11604, "rate": 0.0 },
+      { "max": 20000, "rate": 0.14 },
+      { "max": 35000, "rate": 0.24 },
+      { "max": 60000, "rate": 0.35 },
+      { "max": 300000, "rate": 0.42 },
+      { "max": null, "rate": 0.45 }
+    ]
+  },
+  "deductions": {
+    "personal": { "amount": 12348 },
+    "children": {
+      "type": "per_child_year",
+      "incomeLimit": null,
+      "rules": [{ "childIndex": "all", "amount": 9756 }]
+    }
+  },
+  "consumptionTaxes": [{ "type": "vat", "rate": 0.19 }]
+}
