@@ -1,0 +1,29 @@
+{
+  "countryCode": "RU",
+  "name": "Russia",
+  "currency": "RUB",
+  "incomeTax": {
+    "type": "progressive",
+    "brackets": [
+      { "max": 2500000, "rate": 0.13 },
+      { "max": 50000000, "rate": 0.15 },
+      { "max": null, "rate": 0.2 }
+    ]
+  },
+  "deductions": {
+    "personal": { "amount": 0 },
+    "children": {
+      "type": "per_child_monthly",
+      "incomeLimit": {
+        "amount": 450000,
+        "period": "year"
+      },
+      "rules": [
+        { "childIndex": 1, "amount": 1400 },
+        { "childIndex": 2, "amount": 2800 },
+        { "childIndex": 3, "amount": 6000 }
+      ]
+    }
+  },
+  "consumptionTaxes": [{ "type": "vat", "rate": 0.2 }]
+}
