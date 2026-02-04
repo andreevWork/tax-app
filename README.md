@@ -44,6 +44,6 @@
 - **ESLint**: Code linting
 - **Auto-formatting**: Format on save enabled in VS Code
 
-## Claude code
+## Claude Code
 
 For simpler and more transparent billing/models use this setup - https://openrouter.ai/docs/guides/guides/claude-code-integration
