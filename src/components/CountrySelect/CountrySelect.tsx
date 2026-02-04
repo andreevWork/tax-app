@@ -14,7 +14,13 @@ export function CountrySelect({
   onChange,
 }: CountrySelectProps): React.JSX.Element {
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>): void {
-    onChange(event.target.value as CountryCode);
+    const selectedValue = event.target.value;
+    const selectedCountry = countries.find(
+      (country) => country.countryCode === selectedValue
+    );
+    if (selectedCountry) {
+      onChange(selectedCountry.countryCode);
+    }
   }
 
   return (
@@ -24,6 +30,7 @@ export function CountrySelect({
       onChange={handleChange}
       data-testid="country-select"
       aria-label="Select country"
+      name="country-select"
     >
       {value === null && (
         <option value="" disabled>
