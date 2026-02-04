@@ -1,24 +1,31 @@
 # Get Started
 
-1. Install nvm:
-   - macOS/Linux: https://github.com/nvm-sh/nvm
-   - Windows: https://github.com/coreybutler/nvm-windows
+## Prerequisites
 
-2. Install Node using nvm:
+- **nvm** (Node Version Manager) - manages Node.js versions
+  - macOS/Linux: https://github.com/nvm-sh/nvm
+  - Windows: https://github.com/coreybutler/nvm-windows
+
+## Setup
+
+1. Install and use the correct Node.js version:
 
    ```bash
-   nvm use
+   nvm install    # Install the version specified in .nvmrc (first time only)
+   nvm use        # Switch to the correct Node.js version
    ```
 
-3. Install recommended VS Code extensions for the project
+   > **Note:** Run `nvm use` each time you open a new terminal before running any npm commands.
 
-4. Install dependencies:
+2. Install recommended VS Code extensions for the project
+
+3. Install dependencies:
 
    ```bash
    npm install
    ```
 
-5. Run the project:
+4. Run the project:
    ```bash
    npm start
    ```
@@ -36,3 +43,7 @@
 - **Prettier**: Code formatting
 - **ESLint**: Code linting
 - **Auto-formatting**: Format on save enabled in VS Code
+
+## Claude Code
+
+For simpler and more transparent billing/models use this setup - https://openrouter.ai/docs/guides/guides/claude-code-integration

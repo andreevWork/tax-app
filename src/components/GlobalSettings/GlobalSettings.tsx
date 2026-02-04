@@ -1,9 +1,23 @@
+import type { CountryCode } from '../../domain/taxes';
+import { useCountryStore } from '../../store/country/useCountryStore';
+import { CountrySelect } from '../CountrySelect/CountrySelect';
 import styles from './GlobalSettings.module.css';
 
-export function GlobalSettings() {
+export function GlobalSettings(): React.JSX.Element {
+  const { availableCountries, selectedCountryCode, selectCountry } =
+    useCountryStore();
+
+  function handleCountryChange(code: CountryCode): void {
+    void selectCountry(code);
+  }
+
   return (
     <nav className={styles.headerNavContainer}>
-      <div className={`${styles.navItem} ${styles.item60}`} />
+      <CountrySelect
+        countries={availableCountries}
+        value={selectedCountryCode}
+        onChange={handleCountryChange}
+      />
       <div className={`${styles.navItem} ${styles.item50}`} />
       <div className={`${styles.navItem} ${styles.item80}`} />
     </nav>
