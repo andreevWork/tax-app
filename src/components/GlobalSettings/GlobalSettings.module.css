@@ -10,12 +10,16 @@
   background: var(--gray-400);
 }
 
-.item60 {
-  width: 60px;
+.currency {
+  min-width: 92px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-inline: var(--spacing-md);
 }
 
-.item50 {
-  width: 50px;
+.item60 {
+  width: 60px;
 }
 
 .item80 {

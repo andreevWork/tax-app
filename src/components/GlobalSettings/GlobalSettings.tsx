@@ -4,8 +4,12 @@ import { CountrySelect } from '../CountrySelect/CountrySelect';
 import styles from './GlobalSettings.module.css';
 
 export function GlobalSettings(): React.JSX.Element {
-  const { availableCountries, selectedCountryCode, selectCountry } =
-    useCountryStore();
+  const {
+    availableCountries,
+    selectedCountry,
+    selectedCountryCode,
+    selectCountry,
+  } = useCountryStore();
 
   function handleCountryChange(code: CountryCode): void {
     void selectCountry(code);
@@ -18,7 +22,9 @@ export function GlobalSettings(): React.JSX.Element {
         value={selectedCountryCode}
         onChange={handleCountryChange}
       />
-      <div className={`${styles.navItem} ${styles.item50}`} />
+      <div className={`${styles.navItem} ${styles.currency}`}>
+        {selectedCountry?.currency || 'Currency'}
+      </div>
       <div className={`${styles.navItem} ${styles.item80}`} />
     </nav>
   );
