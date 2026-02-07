@@ -12,7 +12,9 @@ export function HomePage() {
       <h1 data-testid="main-heading" className={shared.visuallyHidden}>
         Tax Calculator
       </h1>
-      <h2>Current country: {selectedCountry?.name ?? 'No country selected'}</h2>
+      <h2 className={shared.textCenter}>
+        Current country: {selectedCountry?.name ?? 'No country selected'}
+      </h2>
       <CaseSettings />
       <TaxChart />
     </div>
