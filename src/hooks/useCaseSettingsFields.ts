@@ -2,13 +2,13 @@ import {
   useCountryStore,
   useCalculatorInputStore,
   useTaxResultStore,
-} from '../../store';
+} from '../store';
 import {
   TaxCalculator,
   DeductionCalculator,
   IncomeTaxCalculator,
   ConsumptionTaxCalculator,
-} from '../../domain/taxes';
+} from '../domain/taxes';
 
 const taxCalculator = new TaxCalculator(
   new DeductionCalculator(),

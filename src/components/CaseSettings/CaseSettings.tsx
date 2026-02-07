@@ -1,6 +1,6 @@
 import shared from '../../styles/shared.module.css';
 import styles from './CaseSettings.module.css';
-import { useCaseSettingsFields } from './useCaseSettingsFields';
+import { useCaseSettingsFields } from '../../hooks/useCaseSettingsFields';
 
 export function CaseSettings() {
   const { selectedCountry, values, visibility, handlers } =
