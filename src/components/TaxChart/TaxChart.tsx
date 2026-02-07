@@ -1,4 +1,5 @@
 import { useCountryStore, useTaxResultStore } from '../../store';
+import shared from '../../styles/shared.module.css';
 import styles from './TaxChart.module.css';
 
 export function TaxChart() {
@@ -8,7 +9,7 @@ export function TaxChart() {
   if (!isCalculated || !result) {
     return (
       <section className={styles.taxChartContainer}>
-        <p className={styles.emptyState}>
+        <p className={shared.emptyState}>
           Configure your inputs and click Calculate to see results
         </p>
       </section>

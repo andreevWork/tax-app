@@ -2,14 +2,9 @@
   padding: 20px;
   border-radius: 8px;
   background: var(--gray-300);
+  width: 100%;
   max-width: 1200px;
   margin-inline: auto;
-}
-
-.emptyState {
-  text-align: center;
-  color: var(--text-color, #6b7280);
-  padding: 40px 20px;
 }
 
 .title {
