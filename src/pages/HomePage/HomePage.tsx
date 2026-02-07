@@ -9,9 +9,7 @@ export function HomePage() {
   return (
     <div className={styles.homePageWrapper}>
       <h1 data-testid="main-heading">Taxes Calculator</h1>
-      <h2 data-testid="main-heading">
-        Current country: {selectedCountry?.name ?? 'No country selected'}
-      </h2>
+      <h2>Current country: {selectedCountry?.name ?? 'No country selected'}</h2>
       <CaseSettings />
       <TaxChart />
     </div>

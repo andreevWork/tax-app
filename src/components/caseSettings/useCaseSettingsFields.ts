@@ -1,4 +1,20 @@
-import { useCountryStore, useCalculatorInputStore } from '../../store';
+import {
+  useCountryStore,
+  useCalculatorInputStore,
+  useTaxResultStore,
+} from '../../store';
+import {
+  TaxCalculator,
+  DeductionCalculator,
+  IncomeTaxCalculator,
+  ConsumptionTaxCalculator,
+} from '../../domain/taxes';
+
+const taxCalculator = new TaxCalculator(
+  new DeductionCalculator(),
+  new IncomeTaxCalculator(),
+  new ConsumptionTaxCalculator()
+);
 
 export function useCaseSettingsFields() {
   const selectedCountry = useCountryStore((state) => state.selectedCountry);
@@ -11,6 +27,7 @@ export function useCaseSettingsFields() {
     setIsMarried,
     reset,
   } = useCalculatorInputStore();
+  const { setResult, clearResult } = useTaxResultStore();
 
   const showMarriedField =
     !!selectedCountry && selectedCountry.deductions.personal.amount > 0;
@@ -31,11 +48,22 @@ export function useCaseSettingsFields() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: trigger calculation
+
+    if (!selectedCountry) return;
+
+    const inputs = {
+      gross,
+      childrenCount,
+      isMarried,
+    };
+
+    const result = taxCalculator.calculate(inputs, selectedCountry);
+    setResult(result);
   };
 
   const handleReset = () => {
     reset();
+    clearResult();
   };
 
   return {
