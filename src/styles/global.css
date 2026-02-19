@@ -17,3 +17,22 @@ body {
   font-weight: 400;
   color: var(--primary-dark);
 }
+
+input[type='checkbox'] {
+  margin-right: var(--spacing-sm);
+  cursor: pointer;
+}
+
+button {
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(0.9);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

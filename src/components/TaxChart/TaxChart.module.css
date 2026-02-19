@@ -2,16 +2,57 @@
   padding: 20px;
   border-radius: 8px;
   background: var(--gray-300);
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
 }
 
-.chartCircle {
+.title {
+  margin-bottom: 24px;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.resultSection {
+  margin-bottom: 24px;
+}
+
+.resultSection h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--primary-dark);
+}
+
+.resultList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resultList li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 16px;
   background: var(--gray-400);
-  width: 200px;
-  height: 200px;
-  border-radius: 100%;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.resultList li span:first-child {
+  font-weight: 500;
+}
+
+.resultList li span:last-child {
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.resultList li.highlighted {
+  border: 2px solid var(--primary-color, #3b82f6);
+  color: white;
+}
+
+.resultList li.highlighted span {
+  color: white;
 }

@@ -3,10 +3,12 @@ export { TaxCalculator } from './TaxCalculator';
 
 // Domain types
 export type {
+  CalculatorInput,
   CountryTaxConfig,
   CountryCode,
   CountryCurrency,
   CountryName,
+  TaxesResult,
 } from './types';
 
 // Deductions

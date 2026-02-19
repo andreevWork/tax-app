@@ -21,12 +21,14 @@ test.describe('Country Select', () => {
     const countryHeading = page.getByRole('heading', { level: 2 });
     const germany = COUNTRIES.DE;
 
-    await expect(countryHeading).toHaveText('Select a country');
+    await expect(countryHeading).toHaveText(
+      'Current country: No country selected'
+    );
 
     await headerCountrySelect.selectOption(germany.countryCode);
 
     await expect(headerCountrySelect).toHaveValue(germany.countryCode);
-    await expect(countryHeading).toHaveText(germany.name);
+    await expect(countryHeading).toHaveText(`Current country: ${germany.name}`);
   });
 
   test('shows flags and names in country options', async ({ page }) => {
@@ -38,7 +40,8 @@ test.describe('Country Select', () => {
     const countries = Object.values(COUNTRIES);
 
     const options = countrySelect.locator('option');
-    await expect(options).toHaveCount(countries.length);
+    // +1 for the default "Select country" placeholder option
+    await expect(options).toHaveCount(countries.length + 1);
 
     for (const country of countries) {
       const option = countrySelect.locator(

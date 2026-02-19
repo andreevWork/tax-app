@@ -1,9 +1,12 @@
 :root {
   --primary-white: #ffffff;
   --primary-dark: #000000;
+  --primary-color: #3b82f6;
 
   --gray-300: #cccccc;
   --gray-400: #aaaaaa;
+  --text-secondary: #6b7280;
 
+  --spacing-sm: 8px;
   --spacing-md: 16px;
 }
