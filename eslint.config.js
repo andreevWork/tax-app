@@ -63,7 +63,7 @@ export default defineConfig(
     },
   },
   {
-    files: ['scripts/ci/**/*.js'],
+    files: ['scripts/**/*.js'],
     languageOptions: {
       sourceType: 'module',
       ecmaVersion: 2022,

@@ -9,6 +9,7 @@
   "scripts": {
     "start": "vite",
     "build": "tsc -b && vite build",
+    "download-rates": "node scripts/utils/download-rates.js",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --check .",
