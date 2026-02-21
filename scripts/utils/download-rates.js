@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 
-const API_URL = 'https://api.frankfurter.app/latest?from=EUR';
+const API_URL = 'https://open.er-api.com/v6/latest/EUR';
 const OUTPUT_PATH = path.join(
   import.meta.dirname,
   '..',
@@ -13,7 +13,7 @@ const OUTPUT_PATH = path.join(
 
 async function downloadRates() {
   try {
-    console.log('🌐 Fetching rates from Frankfurter.dev...');
+    console.log('🌐 Fetching rates from Exchangerate-API...');
 
     const response = await fetch(API_URL);
 
@@ -23,28 +23,19 @@ async function downloadRates() {
 
     const data = await response.json();
 
-    // Frankfurter data format example:
+    // er-api data format example:
     // {
-    //   "amount": 1,
-    //   "base": "EUR",
-    //   "date": "2024-01-15",
+    //   "result": "success",
+    //   "base_code": "EUR",
+    //   "time_last_update_utc": "...",
     //   "rates": { ... }
     // }
 
-    // Adding our metadata
-    const enrichedData = {
-      ...data,
-      last_updated: new Date().toISOString(),
-      next_update: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-      source: 'Frankfurter.dev (European Central Bank data)',
-      disclaimer: 'For informational purposes only',
-    };
-
-    fs.writeFileSync(OUTPUT_PATH, JSON.stringify(enrichedData, null, 2));
+    fs.writeFileSync(OUTPUT_PATH, JSON.stringify(data, null, 2));
 
     console.log('✅ Successfully downloaded rates!');
-    console.log(`📅 Date: ${data.date}`);
-    console.log(`💰 Base currency: ${data.base}`);
+    console.log(`📅 Date: ${data.time_last_update_utc}`);
+    console.log(`💰 Base currency: ${data.base_code}`);
     console.log(`📊 Rates for ${Object.keys(data.rates).length} currencies`);
     console.log(`📁 Saved to: ${OUTPUT_PATH}`);
 
