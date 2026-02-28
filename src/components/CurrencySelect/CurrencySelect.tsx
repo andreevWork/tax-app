@@ -31,6 +31,7 @@ export function CurrencySelect({
       className={styles.select}
       value={value}
       onChange={handleChange}
+      data-testid="currency-select"
       aria-label="Select display currency"
       name="currency-select"
     >
