@@ -1,4 +1,10 @@
 import { useCurrencyStore } from '../store';
+import { COUNTRIES } from '../constants/countries';
+import { POPULAR_CURRENCIES } from '../constants/currency';
+
+const APP_CURRENCIES = [
+  ...new Set(Object.values(COUNTRIES).map((c) => c.currency)),
+];
 
 interface CurrencySelectData {
   currencies: string[];
@@ -16,9 +22,14 @@ export function useCurrencySelect(): CurrencySelectData {
     setSelectedCurrency,
   } = useCurrencyStore();
 
-  const availableCurrencies = rates ? Object.keys(rates) : [];
+  const availableRates = rates ?? {};
   const currencies = [
-    ...new Set(['EUR', baseCurrency, ...availableCurrencies]),
+    ...new Set([
+      'EUR',
+      baseCurrency,
+      ...APP_CURRENCIES.filter((c) => c in availableRates),
+      ...POPULAR_CURRENCIES.filter((c) => c in availableRates),
+    ]),
   ].filter(Boolean);
 
   return {
