@@ -1,6 +1,10 @@
+import { useEffect } from 'react';
 import type { CountryCode } from '../../domain/taxes';
 import { useCountryStore } from '../../store/country/useCountryStore';
+import { useCurrencyStore } from '../../store/currency/useCurrencyStore';
 import { CountrySelect } from '../CountrySelect/CountrySelect';
+import { CurrencySelect } from '../CurrencySelect/CurrencySelect';
+import { useCurrencySelect } from '../../hooks/useCurrencySelect';
 import styles from './GlobalSettings.module.css';
 
 export function GlobalSettings(): React.JSX.Element {
@@ -10,6 +14,19 @@ export function GlobalSettings(): React.JSX.Element {
     selectedCountryCode,
     selectCountry,
   } = useCountryStore();
+
+  const { setBaseCurrency, fetchRates } = useCurrencyStore();
+  const currencySelectProps = useCurrencySelect();
+
+  useEffect(() => {
+    if (selectedCountry?.currency) {
+      setBaseCurrency(selectedCountry.currency);
+    }
+  }, [selectedCountry, setBaseCurrency]);
+
+  useEffect(() => {
+    void fetchRates();
+  }, [fetchRates]);
 
   function handleCountryChange(code: CountryCode): void {
     void selectCountry(code);
@@ -22,10 +39,7 @@ export function GlobalSettings(): React.JSX.Element {
         value={selectedCountryCode}
         onChange={handleCountryChange}
       />
-      <div className={`${styles.navItem} ${styles.currency}`}>
-        {selectedCountry?.currency || 'Currency'}
-      </div>
-      <div className={`${styles.navItem} ${styles.item80}`} />
+      <CurrencySelect {...currencySelectProps} />
     </nav>
   );
 }

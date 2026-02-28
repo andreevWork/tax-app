@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Download fresh rates from Frankfurter.dev
+      - name: Download fresh rates from Exchangerate-API
         run: node scripts/utils/download-rates.js
 
       - name: Check rates file

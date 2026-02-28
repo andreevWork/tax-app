@@ -2,6 +2,7 @@ import {
   useCountryStore,
   useCalculatorInputStore,
   useTaxResultStore,
+  useCurrencyStore,
 } from '../store';
 import {
   TaxCalculator,
@@ -9,6 +10,7 @@ import {
   IncomeTaxCalculator,
   ConsumptionTaxCalculator,
 } from '../domain/taxes';
+import { convertCurrency } from '../utils/currencyConversion';
 
 const taxCalculator = new TaxCalculator(
   new DeductionCalculator(),
@@ -28,6 +30,7 @@ export function useCaseSettingsFields() {
     reset,
   } = useCalculatorInputStore();
   const { setResult, clearResult } = useTaxResultStore();
+  const { baseCurrency, selectedCurrency, rates } = useCurrencyStore();
 
   const showMarriedField =
     !!selectedCountry && selectedCountry.deductions.personal.amount > 0;
@@ -51,8 +54,15 @@ export function useCaseSettingsFields() {
 
     if (!selectedCountry) return;
 
-    const inputs = {
+    const grossInBaseCurrency = convertCurrency(
       gross,
+      selectedCurrency,
+      baseCurrency,
+      rates
+    );
+
+    const inputs = {
+      gross: grossInBaseCurrency,
       childrenCount,
       isMarried,
     };
