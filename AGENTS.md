@@ -40,9 +40,11 @@ src/
 │   ├── consumption/           # VAT, GST, Sales Tax strategies
 │   ├── deductions/            # Personal/children deduction calculators
 │   └── income/                # Progressive tax bracket calculator
-├── store/              # Zustand stores organized by domain (app/, theme/, user/, country/)
-├── components/         # Reusable UI components with CSS Modules
+├── store/              # Zustand stores organized by domain (app/, theme/, user/, country/, currency/)
+├── hooks/              # Adapter hooks that connect stores to presentational components
+├── components/         # Reusable presentational UI components with CSS Modules
 ├── pages/              # Page-level components
+├── constants/          # Static constants (countries, popular currencies)
 ├── data/               # Static country tax configurations
 └── api/                # API integration layer
 ```
@@ -58,6 +60,14 @@ The tax calculation system uses dependency injection with three specialized calc
 
 Input: `CalculatorInput` (gross income, children count, married status, consumption)
 Output: `TaxesResult` (deductions, taxes, totals with effective rate)
+
+### Component Architecture
+
+Components in `src/components/` follow the **presentational component + adapter hook** pattern:
+
+- **Component** (`ComponentName.tsx`) — Pure UI, receives all data via props, no direct store access
+- **Hook** (`src/hooks/useComponentName.ts`) — Connects to Zustand stores, prepares and returns props for the component
+- **Page** (`src/pages/`) — Uses the hook and passes props to the component via spread
 
 ### State Management
 
