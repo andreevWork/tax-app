@@ -4,24 +4,10 @@
   gap: 12px;
 }
 
-.navItem {
-  height: 30px;
-  border-radius: 4px;
-  background: var(--gray-400);
-}
-
 .currency {
   min-width: 92px;
   display: flex;
   justify-content: center;
   align-items: center;
   padding-inline: var(--spacing-md);
-}
-
-.item60 {
-  width: 60px;
-}
-
-.item80 {
-  width: 80px;
 }

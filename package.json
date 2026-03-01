@@ -9,6 +9,7 @@
   "scripts": {
     "start": "vite",
     "build": "tsc -b && vite build",
+    "download-rates": "node scripts/utils/download-rates.js",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --check .",
@@ -32,7 +33,7 @@
     "@playwright/test": "^1.56.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
-    "@types/node": "^24.6.0",
+    "@types/node": "^24.10.13",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",

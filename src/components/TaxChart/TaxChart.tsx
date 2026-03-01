@@ -1,14 +1,24 @@
-import { useCountryStore, useTaxResultStore } from '../../store';
+import type { TaxesResult } from '../../domain/taxes';
 import shared from '../../styles/shared.module.css';
+import { ResultRow } from './ResultRow';
 import styles from './TaxChart.module.css';
 
-export function TaxChart() {
-  const selectedCountry = useCountryStore((state) => state.selectedCountry);
-  const { result, isCalculated } = useTaxResultStore();
+interface TaxChartProps {
+  result: TaxesResult | null;
+  isCalculated: boolean;
+  formatCurrency: (value: number) => string;
+  formatPercent: (value: number) => string;
+}
 
+export function TaxChart({
+  result,
+  isCalculated,
+  formatCurrency,
+  formatPercent,
+}: TaxChartProps): React.JSX.Element {
   if (!isCalculated || !result) {
     return (
-      <section className={styles.taxChartContainer}>
+      <section className={styles.taxChartContainer} aria-label="Tax results">
         <p className={shared.emptyState}>
           Configure your inputs and click Calculate to see results
         </p>
@@ -16,74 +26,68 @@ export function TaxChart() {
     );
   }
 
-  const currency = selectedCountry?.currency || '';
-  const formatCurrency = (value: number) => {
-    return `${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currency}`;
-  };
-
-  const formatPercent = (value: number) => {
-    return `${(value * 100).toFixed(2)}%`;
-  };
-
   return (
-    <section className={styles.taxChartContainer}>
+    <section className={styles.taxChartContainer} aria-label="Tax results">
       <h2 className={styles.title}>Tax Calculation Results</h2>
 
       <div className={styles.resultSection}>
         <h3>Deductions</h3>
         <ul className={styles.resultList}>
-          <li>
-            <span>Personal Deduction:</span>
-            <span>{formatCurrency(result.deductions.personal)}</span>
-          </li>
-          <li>
-            <span>Children Deduction:</span>
-            <span>{formatCurrency(result.deductions.children)}</span>
-          </li>
-          <li className={styles.highlighted}>
-            <span>Total Deductions:</span>
-            <span>{formatCurrency(result.deductions.totalDeductions)}</span>
-          </li>
+          <ResultRow
+            label="Personal Deduction:"
+            value={formatCurrency(result.deductions.personal)}
+          />
+          <ResultRow
+            label="Children Deduction:"
+            value={formatCurrency(result.deductions.children)}
+          />
+          <ResultRow
+            label="Total Deductions:"
+            value={formatCurrency(result.deductions.totalDeductions)}
+            highlighted
+          />
         </ul>
       </div>
 
       <div className={styles.resultSection}>
         <h3>Taxes</h3>
         <ul className={styles.resultList}>
-          <li>
-            <span>Taxable Income:</span>
-            <span>{formatCurrency(result.taxes.taxableIncome)}</span>
-          </li>
-          <li>
-            <span>Income Tax:</span>
-            <span>{formatCurrency(result.taxes.incomeTax)}</span>
-          </li>
-          <li>
-            <span>Consumption Tax:</span>
-            <span>{formatCurrency(result.taxes.consumptionTax)}</span>
-          </li>
-          <li className={styles.highlighted}>
-            <span>Total Tax:</span>
-            <span>{formatCurrency(result.taxes.totalTax)}</span>
-          </li>
+          <ResultRow
+            label="Taxable Income:"
+            value={formatCurrency(result.taxes.taxableIncome)}
+          />
+          <ResultRow
+            label="Income Tax:"
+            value={formatCurrency(result.taxes.incomeTax)}
+          />
+          <ResultRow
+            label="Consumption Tax:"
+            value={formatCurrency(result.taxes.consumptionTax)}
+          />
+          <ResultRow
+            label="Total Tax:"
+            value={formatCurrency(result.taxes.totalTax)}
+            highlighted
+          />
         </ul>
       </div>
 
       <div className={styles.resultSection}>
         <h3>Totals</h3>
         <ul className={styles.resultList}>
-          <li>
-            <span>Gross Income:</span>
-            <span>{formatCurrency(result.totals.grossIncome)}</span>
-          </li>
-          <li>
-            <span>Net Income:</span>
-            <span>{formatCurrency(result.totals.netIncome)}</span>
-          </li>
-          <li className={styles.highlighted}>
-            <span>Effective Tax Rate:</span>
-            <span>{formatPercent(result.totals.effectiveTaxRate)}</span>
-          </li>
+          <ResultRow
+            label="Gross Income:"
+            value={formatCurrency(result.totals.grossIncome)}
+          />
+          <ResultRow
+            label="Net Income:"
+            value={formatCurrency(result.totals.netIncome)}
+          />
+          <ResultRow
+            label="Effective Tax Rate:"
+            value={formatPercent(result.totals.effectiveTaxRate)}
+            highlighted
+          />
         </ul>
       </div>
     </section>

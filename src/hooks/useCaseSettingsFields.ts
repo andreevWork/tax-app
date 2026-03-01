@@ -1,7 +1,9 @@
+import { useEffect, useRef } from 'react';
 import {
   useCountryStore,
   useCalculatorInputStore,
   useTaxResultStore,
+  useCurrencyStore,
 } from '../store';
 import {
   TaxCalculator,
@@ -9,6 +11,7 @@ import {
   IncomeTaxCalculator,
   ConsumptionTaxCalculator,
 } from '../domain/taxes';
+import { convertCurrency } from '../utils/currencyConversion';
 
 const taxCalculator = new TaxCalculator(
   new DeductionCalculator(),
@@ -28,6 +31,24 @@ export function useCaseSettingsFields() {
     reset,
   } = useCalculatorInputStore();
   const { setResult, clearResult } = useTaxResultStore();
+  const { baseCurrency, selectedCurrency, rates } = useCurrencyStore();
+
+  const prevCurrencyRef = useRef(selectedCurrency);
+
+  useEffect(() => {
+    const prevCurrency = prevCurrencyRef.current;
+    prevCurrencyRef.current = selectedCurrency;
+
+    if (prevCurrency !== selectedCurrency && gross > 0) {
+      const convertedGross = convertCurrency(
+        gross,
+        prevCurrency,
+        selectedCurrency,
+        rates
+      );
+      setGross(Math.round(convertedGross * 100) / 100);
+    }
+  }, [selectedCurrency, gross, rates, setGross]);
 
   const showMarriedField =
     !!selectedCountry && selectedCountry.deductions.personal.amount > 0;
@@ -51,8 +72,15 @@ export function useCaseSettingsFields() {
 
     if (!selectedCountry) return;
 
-    const inputs = {
+    const grossInBaseCurrency = convertCurrency(
       gross,
+      selectedCurrency,
+      baseCurrency,
+      rates
+    );
+
+    const inputs = {
+      gross: grossInBaseCurrency,
       childrenCount,
       isMarried,
     };
