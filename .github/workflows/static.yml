@@ -43,6 +43,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Download fresh exchange rates
+        run: node scripts/utils/download-rates.js
+
       - name: Build project
         run: npm run build
 
