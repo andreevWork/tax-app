@@ -5,9 +5,11 @@
   "incomeTax": {
     "type": "progressive",
     "brackets": [
-      { "max": 2500000, "rate": 0.13 },
-      { "max": 50000000, "rate": 0.15 },
-      { "max": null, "rate": 0.2 }
+      { "max": 2400000, "rate": 0.13 },
+      { "max": 5000000, "rate": 0.15 },
+      { "max": 20000000, "rate": 0.18 },
+      { "max": 50000000, "rate": 0.2 },
+      { "max": null, "rate": 0.22 }
     ]
   },
   "deductions": {
