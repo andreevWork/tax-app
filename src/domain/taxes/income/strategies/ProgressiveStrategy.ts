@@ -4,12 +4,12 @@ import type { IncomeTaxStrategy } from './types';
 export class ProgressiveStrategy implements IncomeTaxStrategy {
   readonly type = 'progressive' as const;
 
-  calculate(taxableIncome: number, taxes: IncomeTax): number {
+  calculate(taxableIncome: number, taxConfig: IncomeTax): number {
     let rest = taxableIncome;
     let tax = 0;
     let prevMax = 0;
 
-    for (const bracket of taxes.brackets) {
+    for (const bracket of taxConfig.brackets) {
       const currentMax = bracket.max ?? Infinity;
       const span = currentMax - prevMax;
       const incomeInBracket = Math.min(rest, span);
