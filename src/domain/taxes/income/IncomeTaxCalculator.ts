@@ -2,33 +2,48 @@ import type { IncomeTax, IncomeTaxType } from './types';
 import {
   defaultIncomeTaxStrategies,
   type IncomeTaxStrategy,
+  type AnyIncomeTaxStrategy,
+  type StrategyMap,
 } from './strategies';
 
 export interface IncomeTaxCalculatorOptions {
-  strategies?: IncomeTaxStrategy[];
+  strategies?: AnyIncomeTaxStrategy[];
 }
 
 export class IncomeTaxCalculator {
-  private readonly strategies: Map<IncomeTaxType, IncomeTaxStrategy>;
+  private readonly strategies: StrategyMap = {};
 
   constructor(options: IncomeTaxCalculatorOptions = {}) {
     const strategies = options.strategies ?? defaultIncomeTaxStrategies;
-    this.strategies = new Map(strategies.map((s) => [s.type, s]));
+    for (const s of strategies) {
+      this.registerStrategy(s);
+    }
   }
 
   calculate(taxableIncome: number, taxes: IncomeTax): number {
-    const strategy = this.strategies.get(taxes.type);
+    const strategy = this.strategies[taxes.type] as
+      | AnyIncomeTaxStrategy
+      | undefined;
 
     if (!strategy) return 0;
 
-    return Math.max(0, strategy.calculate(taxableIncome, taxes));
+    type GenericStrategy = IncomeTaxStrategy;
+    return Math.max(
+      0,
+      (strategy as unknown as GenericStrategy).calculate(taxableIncome, taxes)
+    );
   }
 
-  registerStrategy(strategy: IncomeTaxStrategy): void {
-    this.strategies.set(strategy.type, strategy);
+  registerStrategy(strategy: AnyIncomeTaxStrategy): void {
+    // Requires a type assertion to bypass correlated union indexing limits
+    const typedStrategies = this.strategies as Record<
+      string,
+      AnyIncomeTaxStrategy
+    >;
+    typedStrategies[strategy.type] = strategy;
   }
 
   hasStrategy(type: IncomeTaxType): boolean {
-    return this.strategies.has(type);
+    return this.strategies[type] !== undefined;
   }
 }

@@ -5,10 +5,30 @@ export const taxBracketSchema = z.object({
   rate: z.number().min(0).max(1),
 });
 
-export const incomeTaxSchema = z.object({
-  type: z.enum(['progressive', 'flat']),
-  brackets: z.array(taxBracketSchema).min(1),
+export const formulaZoneSchema = z.object({
+  upTo: z.number().nullable(),
+  a: z.number(),
+  b: z.number(),
+  c: z.number(),
+  variableOffset: z.number(),
+  variableDivisor: z.number().positive(),
+  usesVariable: z.boolean(),
 });
+
+export const incomeTaxSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('progressive'),
+    brackets: z.array(taxBracketSchema).min(1),
+  }),
+  z.object({
+    type: z.literal('flat'),
+    brackets: z.array(taxBracketSchema).min(1),
+  }),
+  z.object({
+    type: z.literal('formula'),
+    formulaZones: z.array(formulaZoneSchema).min(1),
+  }),
+]);
 
 // ===== Deductions =====
 export const childDeductionRuleSchema = z.object({

@@ -24,7 +24,7 @@ The user specifies which country to verify. Examples:
 
 4. **Read the current country data** from `src/data/countries/[filename].json` (use the `jsonFile` field from `sources.json`).
 
-5. **Fetch official data** from the source URLs listed for the country. Use `read_url_content` first; fall back to `browser_subagent` if needed.
+5. **Fetch official data** from the source URLs listed for the country. Always ensure you are looking for the data applicable to the **current tax year**. Use `read_url_content` first; fall back to `browser_subagent` if needed.
 
 6. **Compare and generate a diff report** following the template in SKILL.md.
 

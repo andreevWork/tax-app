@@ -1,10 +1,15 @@
 import type { IncomeTax } from '../types';
 import type { IncomeTaxStrategy } from './types';
 
-export class ProgressiveStrategy implements IncomeTaxStrategy {
+export class ProgressiveStrategy
+  implements IncomeTaxStrategy<Extract<IncomeTax, { type: 'progressive' }>>
+{
   readonly type = 'progressive' as const;
 
-  calculate(taxableIncome: number, taxConfig: IncomeTax): number {
+  calculate(
+    taxableIncome: number,
+    taxConfig: Extract<IncomeTax, { type: 'progressive' }>
+  ): number {
     let rest = taxableIncome;
     let tax = 0;
     let prevMax = 0;
