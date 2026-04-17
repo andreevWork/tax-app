@@ -27,5 +27,5 @@
       ]
     }
   },
-  "consumptionTaxes": [{ "type": "vat", "rate": 0.2 }]
+  "consumptionTaxes": [{ "type": "vat", "rate": 0.22 }]
 }

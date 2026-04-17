@@ -1,12 +1,14 @@
 # Tax Data Verification: Russia 🇷🇺
 
-**Date**: 2026-03-14
-**Tax Year**: 2025+ (effective January 1, 2025)
+**Date**: 2026-04-17
+**Tax Year**: 2026 (checked against current law text; article editions effective as of 2026)
 **Source(s)**:
 
-- [ФНС России — ставки НДФЛ](https://www.nalog.gov.ru/rn77/taxation/taxes/ndfl/) (via browser)
-- [ФНС России — ставки НДС](https://www.nalog.gov.ru/rn77/taxation/taxes/nds/) (via browser)
-- Web search across consultant.ru, nalog.gov.ru, awaragroup.com, and others
+- https://www.nalog.gov.ru/rn77/taxation/taxes/ndfl/
+- https://www.consultant.ru/document/cons_doc_LAW_28165/3e4bbd6dd9fb5dd4e9394f447653506e1d6fa3a9/ (НК РФ ст. 224)
+- https://www.consultant.ru/document/cons_doc_LAW_28165/c100f38376d82fcc23ff72192989c382d6e3a646/ (НК РФ ст. 218)
+- https://www.nalog.gov.ru/rn77/taxation/taxes/nds/
+- https://www.consultant.ru/document/cons_doc_LAW_28165/35cc6698564adc4507baa31c9cfdbb4f2516d068/ (НК РФ ст. 164)
 
 **Status**: ❌ Updates needed
 
@@ -15,19 +17,16 @@
 | Field           | Current Value | Official Value | Status |
 | --------------- | ------------- | -------------- | ------ |
 | Type            | progressive   | progressive    | ✅     |
-| Bracket 1: max  | 2,500,000     | 2,400,000      | ❌     |
+| Bracket 1: max  | 2,400,000     | 2,400,000      | ✅     |
 | Bracket 1: rate | 13%           | 13%            | ✅     |
-| Bracket 2: max  | 50,000,000    | 5,000,000      | ❌     |
+| Bracket 2: max  | 5,000,000     | 5,000,000      | ✅     |
 | Bracket 2: rate | 15%           | 15%            | ✅     |
-| Bracket 3: max  | ∞ (null)      | 20,000,000     | ❌     |
-| Bracket 3: rate | 20%           | 18%            | ❌     |
-| Bracket 4: max  | — (missing)   | 50,000,000     | ❌     |
-| Bracket 4: rate | — (missing)   | 20%            | ❌     |
-| Bracket 5: max  | — (missing)   | ∞ (null)       | ❌     |
-| Bracket 5: rate | — (missing)   | 22%            | ❌     |
-
-> [!CAUTION]
-> The app has **3 brackets** but the official 2025 scale has **5 brackets**. The first bracket threshold is also wrong (2,500,000 vs 2,400,000). This is a significant data error affecting tax calculations.
+| Bracket 3: max  | 20,000,000    | 20,000,000     | ✅     |
+| Bracket 3: rate | 18%           | 18%            | ✅     |
+| Bracket 4: max  | 50,000,000    | 50,000,000     | ✅     |
+| Bracket 4: rate | 20%           | 20%            | ✅     |
+| Bracket 5: max  | ∞ (null)      | ∞ (null)       | ✅     |
+| Bracket 5: rate | 22%           | 22%            | ✅     |
 
 ## Deductions
 
@@ -44,32 +43,21 @@
 
 | Field    | Current Value | Official Value | Status |
 | -------- | ------------- | -------------- | ------ |
-| VAT rate | 20%           | 20%            | ✅     |
+| VAT rate | 20%           | 22%            | ❌     |
 
 ## Summary
 
-The deductions and VAT data are ✅ **correct and up to date** with the 2025 tax reform.
+Russia income-tax brackets and child-deduction data in the app are aligned with the current legal text.
 
-The income tax brackets have **critical mismatches**: the app uses the old 3-bracket system while Russia switched to a 5-tier progressive scale on January 1, 2025. The first bracket threshold is also slightly off (2.5M vs 2.4M).
+One mismatch was found for consumption tax:
 
-### Proposed fix for [russia.json](file:///Users/tanykos/Development/projects/tax/tax-app/src/data/countries/russia.json)
+- The app stores VAT as 20% (`0.2`), while НК РФ ст. 164 (current 2026 edition) specifies the general VAT rate as 22% (`0.22`) for cases not covered by reduced/zero rates.
+
+### Proposed fix for `src/data/countries/russia.json`
 
 ```diff
- {
-   "countryCode": "RU",
-   "name": "Russia",
-   "currency": "RUB",
-   "incomeTax": {
-     "type": "progressive",
-     "brackets": [
--      { "max": 2500000, "rate": 0.13 },
--      { "max": 50000000, "rate": 0.15 },
--      { "max": null, "rate": 0.2 }
-+      { "max": 2400000, "rate": 0.13 },
-+      { "max": 5000000, "rate": 0.15 },
-+      { "max": 20000000, "rate": 0.18 },
-+      { "max": 50000000, "rate": 0.20 },
-+      { "max": null, "rate": 0.22 }
-     ]
-   },
+  "consumptionTaxes": [
+-    { "type": "vat", "rate": 0.2 }
++    { "type": "vat", "rate": 0.22 }
+  ]
 ```

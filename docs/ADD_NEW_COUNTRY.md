@@ -51,10 +51,10 @@ That's it! The country will automatically appear in the selector and load on dem
 
 ### incomeTax
 
-| Field      | Type                        | Description          |
-| ---------- | --------------------------- | -------------------- |
-| `type`     | `"progressive"` \| `"flat"` | Tax calculation type |
-| `brackets` | `TaxBracket[]`              | Tax rates            |
+| Field      | Type                                       | Description          |
+| ---------- | ------------------------------------------ | -------------------- |
+| `type`     | `"progressive"` \| `"flat"` \| `"formula"` | Tax calculation type |
+| `brackets` | `TaxBracket[]`                             | Tax rates            |
 
 **Progressive** — progressive tax scale (each bracket applies to its portion of income):
 
