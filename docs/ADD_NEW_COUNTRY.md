@@ -8,11 +8,11 @@
 
 ```typescript
 export const COUNTRIES = {
-  RU: { countryCode: 'RU', name: 'Russia', currency: 'RUB' },
-  DE: { countryCode: 'DE', name: 'Germany', currency: 'EUR' },
-  RS: { countryCode: 'RS', name: 'Serbia', currency: 'RSD' },
+  RU: { countryCode: 'RU', name: 'Russia', currency: 'RUB', flag: '🇷🇺' },
+  DE: { countryCode: 'DE', name: 'Germany', currency: 'EUR', flag: '🇩🇪' },
+  RS: { countryCode: 'RS', name: 'Serbia', currency: 'RSD', flag: '🇷🇸' },
   // ← Add new country
-  US: { countryCode: 'US', name: 'United States', currency: 'USD' },
+  US: { countryCode: 'US', name: 'United States', currency: 'USD', flag: '🇺🇸' },
 } as const;
 ```
 
@@ -51,10 +51,10 @@ That's it! The country will automatically appear in the selector and load on dem
 
 ### incomeTax
 
-| Field      | Type                        | Description          |
-| ---------- | --------------------------- | -------------------- |
-| `type`     | `"progressive"` \| `"flat"` | Tax calculation type |
-| `brackets` | `TaxBracket[]`              | Tax rates            |
+| Field      | Type                                       | Description          |
+| ---------- | ------------------------------------------ | -------------------- |
+| `type`     | `"progressive"` \| `"flat"` \| `"formula"` | Tax calculation type |
+| `brackets` | `TaxBracket[]`                             | Tax rates            |
 
 **Progressive** — progressive tax scale (each bracket applies to its portion of income):
 
@@ -154,7 +154,7 @@ Supported types: `vat`, `sales_tax`, `gst`
 📍 `src/constants/countries.ts`
 
 ```typescript
-US: { countryCode: 'US', name: 'United States', currency: 'USD' },
+US: { countryCode: 'US', name: 'United States', currency: 'USD', flag: '🇺🇸' },
 ```
 
 ### 2. Data File
@@ -250,7 +250,7 @@ If you need a new `type` (e.g., `"cantonal"` for Switzerland):
    export class CantonalStrategy implements IncomeTaxStrategy {
      readonly type = 'cantonal' as const;
 
-     calculate(taxableIncome: number, taxes: IncomeTax): number {
+     calculate(taxableIncome: number, taxConfig: IncomeTax): number {
        // Calculation logic
      }
    }

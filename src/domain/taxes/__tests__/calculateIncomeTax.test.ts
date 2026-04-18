@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   FlatStrategy,
+  FormulaStrategy,
   IncomeTaxCalculator,
   ProgressiveStrategy,
 } from '../income';
@@ -137,5 +138,100 @@ describe('Income Tax Strategies', () => {
       const strategy = new FlatStrategy();
       expect(strategy.type).toBe('flat');
     });
+  });
+
+  describe('FormulaStrategy', () => {
+    it('has correct type', () => {
+      const strategy = new FormulaStrategy();
+      expect(strategy.type).toBe('formula');
+    });
+  });
+});
+
+describe('FormulaStrategy — §32a EStG 2026 German tax table', () => {
+  const calculator = new IncomeTaxCalculator();
+
+  const germanyFormula: IncomeTax = {
+    type: 'formula',
+    formulaZones: [
+      {
+        upTo: 12348,
+        a: 0,
+        b: 0,
+        c: 0,
+        variableOffset: 0,
+        variableDivisor: 1,
+        usesVariable: false,
+      },
+      {
+        upTo: 17799,
+        a: 914.51,
+        b: 1400,
+        c: 0,
+        variableOffset: 12348,
+        variableDivisor: 10000,
+        usesVariable: true,
+      },
+      {
+        upTo: 69878,
+        a: 173.1,
+        b: 2397,
+        c: 1034.87,
+        variableOffset: 17799,
+        variableDivisor: 10000,
+        usesVariable: true,
+      },
+      {
+        upTo: 277825,
+        a: 0.42,
+        b: -11135.63,
+        c: 0,
+        variableOffset: 0,
+        variableDivisor: 1,
+        usesVariable: false,
+      },
+      {
+        upTo: null,
+        a: 0.45,
+        b: -19470.38,
+        c: 0,
+        variableOffset: 0,
+        variableDivisor: 1,
+        usesVariable: false,
+      },
+    ],
+  };
+
+  /**
+   * Values from the official Einkommenssteuertabelle 2026 (Grundtabelle).
+   * Each entry: [taxableIncome, expectedTax]
+   */
+  const officialTable: [number, number][] = [
+    [10_000, 0],
+    [12_000, 0],
+    [14_000, 256],
+    [16_000, 633],
+    [18_000, 1_083],
+    [20_000, 1_570],
+    [24_000, 2_587],
+    [28_000, 3_660],
+    [32_000, 4_787],
+    [36_000, 5_971],
+    [40_000, 7_209],
+    [44_000, 8_503],
+    [48_000, 9_852],
+    [52_000, 11_257],
+    [56_000, 12_717],
+    [60_000, 14_233],
+    [65_000, 16_205],
+    [70_000, 18_264],
+    [75_000, 20_364],
+    [80_000, 22_464],
+    [100_000, 30_864],
+  ];
+
+  it.each(officialTable)('zvE = %i€ → ESt = %i€', (income, expectedTax) => {
+    const result = calculator.calculate(income, germanyFormula);
+    expect(result).toBe(expectedTax);
   });
 });

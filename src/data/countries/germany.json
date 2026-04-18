@@ -3,14 +3,53 @@
   "name": "Germany",
   "currency": "EUR",
   "incomeTax": {
-    "type": "progressive",
-    "brackets": [
-      { "max": 11604, "rate": 0.0 },
-      { "max": 20000, "rate": 0.14 },
-      { "max": 35000, "rate": 0.24 },
-      { "max": 60000, "rate": 0.35 },
-      { "max": 300000, "rate": 0.42 },
-      { "max": null, "rate": 0.45 }
+    "type": "formula",
+    "formulaZones": [
+      {
+        "upTo": 12348,
+        "a": 0,
+        "b": 0,
+        "c": 0,
+        "variableOffset": 0,
+        "variableDivisor": 1,
+        "usesVariable": false
+      },
+      {
+        "upTo": 17799,
+        "a": 914.51,
+        "b": 1400,
+        "c": 0,
+        "variableOffset": 12348,
+        "variableDivisor": 10000,
+        "usesVariable": true
+      },
+      {
+        "upTo": 69878,
+        "a": 173.1,
+        "b": 2397,
+        "c": 1034.87,
+        "variableOffset": 17799,
+        "variableDivisor": 10000,
+        "usesVariable": true
+      },
+      {
+        "upTo": 277825,
+        "a": 0.42,
+        "b": -11135.63,
+        "c": 0,
+        "variableOffset": 0,
+        "variableDivisor": 1,
+        "usesVariable": false
+      },
+      {
+        "upTo": null,
+        "a": 0.45,
+        "b": -19470.38,
+        "c": 0,
+        "variableOffset": 0,
+        "variableDivisor": 1,
+        "usesVariable": false
+      }
     ]
   },
   "deductions": {
