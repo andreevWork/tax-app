@@ -1,4 +1,8 @@
-export type IncomeTaxType = 'progressive' | 'flat' | 'formula';
+export type IncomeTaxType =
+  | 'progressive'
+  | 'flat'
+  | 'formula'
+  | 'family_quotient';
 
 export interface TaxBracket {
   max: number | null;
@@ -15,7 +19,13 @@ export interface FormulaZone {
   usesVariable: boolean;
 }
 
+export interface FamilyQuotientConfig {
+  brackets: TaxBracket[];
+  capPerHalfPart: number;
+}
+
 export type IncomeTax =
   | { type: 'progressive'; brackets: TaxBracket[] }
   | { type: 'flat'; brackets: TaxBracket[] }
-  | { type: 'formula'; formulaZones: FormulaZone[] };
+  | { type: 'formula'; formulaZones: FormulaZone[] }
+  | ({ type: 'family_quotient' } & FamilyQuotientConfig);

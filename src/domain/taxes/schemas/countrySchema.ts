@@ -28,6 +28,11 @@ export const incomeTaxSchema = z.discriminatedUnion('type', [
     type: z.literal('formula'),
     formulaZones: z.array(formulaZoneSchema).min(1),
   }),
+  z.object({
+    type: z.literal('family_quotient'),
+    brackets: z.array(taxBracketSchema).min(1),
+    capPerHalfPart: z.number().positive(),
+  }),
 ]);
 
 // ===== Deductions =====

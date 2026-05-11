@@ -11,6 +11,7 @@ const countryFileMap: Record<CountryCode, string> = {
   RU: 'russia',
   DE: 'germany',
   RS: 'serbia',
+  FR: 'france',
 };
 
 /**

@@ -40,6 +40,13 @@ export class TaxCalculator {
       country.incomeTax
     );
 
+    const familyBenefit = this.computeFamilyBenefit(
+      inputs,
+      deductions,
+      rawIncomeTax,
+      country
+    );
+
     const incomeTax = this.postTaxAdjustmentCalculator.calculate(
       rawIncomeTax,
       inputs,
@@ -56,7 +63,7 @@ export class TaxCalculator {
     const effectiveTaxRate = inputs.gross === 0 ? 0 : totalTax / inputs.gross;
 
     return {
-      deductions,
+      deductions: { ...deductions, familyBenefit },
       taxes: {
         taxableIncome,
         incomeTax,
@@ -73,5 +80,27 @@ export class TaxCalculator {
 
   private computeTaxableIncome(gross: number, totalDeductions: number) {
     return Math.max(0, gross - totalDeductions);
+  }
+
+  private computeFamilyBenefit(
+    inputs: CalculatorInput,
+    deductions: ReturnType<DeductionCalculator['calculate']>,
+    rawIncomeTax: number,
+    country: CountryTaxConfig
+  ): number | undefined {
+    if (
+      country.incomeTax.type !== 'family_quotient' ||
+      inputs.childrenCount === 0
+    ) {
+      return undefined;
+    }
+
+    const taxWithNoChildren = this.incomeTaxCalculator.calculate(
+      { ...inputs, childrenCount: 0 },
+      deductions,
+      country.incomeTax
+    );
+
+    return taxWithNoChildren - rawIncomeTax;
   }
 }

@@ -50,10 +50,16 @@ export function useCaseSettingsFields() {
     }
   }, [selectedCurrency, gross, rates, setGross]);
 
+  const usesHouseholdTaxation =
+    !!selectedCountry && selectedCountry.incomeTax.type === 'family_quotient';
+
   const showMarriedField =
-    !!selectedCountry && selectedCountry.deductions.personal.amount > 0;
+    !!selectedCountry &&
+    (selectedCountry.deductions.personal.amount > 0 || usesHouseholdTaxation);
   const showChildrenField =
-    !!selectedCountry && selectedCountry.deductions.children.type !== 'none';
+    !!selectedCountry &&
+    (selectedCountry.deductions.children.type !== 'none' ||
+      usesHouseholdTaxation);
 
   const handleGrossChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGross(Number(e.target.value) || 0);
