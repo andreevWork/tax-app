@@ -3,20 +3,24 @@ import type { CountryTaxConfig } from './types';
 import { ConsumptionTaxCalculator } from './consumption';
 import { DeductionCalculator } from './deductions';
 import { IncomeTaxCalculator } from './income';
+import { PostTaxAdjustmentCalculator } from './postAdjustments';
 
 export class TaxCalculator {
   private readonly deductionCalculator: DeductionCalculator;
   private readonly incomeTaxCalculator: IncomeTaxCalculator;
   private readonly consumptionTaxCalculator: ConsumptionTaxCalculator;
+  private readonly postTaxAdjustmentCalculator: PostTaxAdjustmentCalculator;
 
   constructor(
     deductionCalculator: DeductionCalculator,
     incomeTaxCalculator: IncomeTaxCalculator,
-    consumptionTaxCalculator: ConsumptionTaxCalculator
+    consumptionTaxCalculator: ConsumptionTaxCalculator,
+    postTaxAdjustmentCalculator: PostTaxAdjustmentCalculator = new PostTaxAdjustmentCalculator()
   ) {
     this.deductionCalculator = deductionCalculator;
     this.incomeTaxCalculator = incomeTaxCalculator;
     this.consumptionTaxCalculator = consumptionTaxCalculator;
+    this.postTaxAdjustmentCalculator = postTaxAdjustmentCalculator;
   }
 
   calculate(inputs: CalculatorInput, country: CountryTaxConfig): TaxesResult {
@@ -30,10 +34,16 @@ export class TaxCalculator {
       deductions.totalDeductions
     );
 
-    const incomeTax = this.incomeTaxCalculator.calculate(
+    const rawIncomeTax = this.incomeTaxCalculator.calculate(
       inputs,
       deductions,
       country.incomeTax
+    );
+
+    const incomeTax = this.postTaxAdjustmentCalculator.calculate(
+      rawIncomeTax,
+      inputs,
+      country.postTaxAdjustments ?? []
     );
 
     const consumptionTax = this.consumptionTaxCalculator.calculate(

@@ -80,6 +80,20 @@ export const consumptionTaxSchema = z.object({
   rate: z.number().min(0).max(1),
 });
 
+// ===== Post-Tax Adjustments =====
+export const decoteSchema = z.object({
+  type: z.literal('decote'),
+  singleThreshold: z.number().positive(),
+  jointThreshold: z.number().positive(),
+  singleBase: z.number().positive(),
+  jointBase: z.number().positive(),
+  rate: z.number().min(0).max(1),
+});
+
+export const postTaxAdjustmentSchema = z.discriminatedUnion('type', [
+  decoteSchema,
+]);
+
 // ===== Country =====
 export const countrySchema = z.object({
   countryCode: z.string().length(2),
@@ -88,6 +102,7 @@ export const countrySchema = z.object({
   incomeTax: incomeTaxSchema,
   deductions: deductionsSchema,
   consumptionTaxes: z.array(consumptionTaxSchema),
+  postTaxAdjustments: z.array(postTaxAdjustmentSchema).optional(),
 });
 
 // ===== Type exports inferred from schemas =====
