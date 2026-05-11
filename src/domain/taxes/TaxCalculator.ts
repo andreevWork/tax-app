@@ -30,18 +30,9 @@ export class TaxCalculator {
       deductions.totalDeductions
     );
 
-    // For formula-based tax regimes (like Germany), the personal deduction
-    // (Grundfreibetrag) is mathematically built into the progressive formula
-    // as the first zero-tax bracket. Since we already subtracted it for the UI
-    // display of "Taxable Income", we must calculate the "true" formula base
-    // by only subtracting children/other deductions to avoid double-dipping.
-    const incomeTaxBase =
-      country.incomeTax.type === 'formula'
-        ? Math.max(0, inputs.gross - deductions.children)
-        : taxableIncome;
-
     const incomeTax = this.incomeTaxCalculator.calculate(
-      incomeTaxBase,
+      inputs,
+      deductions,
       country.incomeTax
     );
 

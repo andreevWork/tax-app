@@ -1,8 +1,14 @@
+import type { CalculatorInput } from '../../types';
+import type { DeductionsResult } from '../../deductions/types';
 import type { IncomeTax, IncomeTaxType } from '../types';
 
 export interface IncomeTaxStrategy<T extends IncomeTax = IncomeTax> {
   readonly type: IncomeTaxType;
-  calculate(taxableIncome: number, taxConfig: T): number;
+  calculate(
+    input: CalculatorInput,
+    deductions: DeductionsResult,
+    taxConfig: T
+  ): number;
 }
 
 export type AnyIncomeTaxStrategy = {

@@ -1,3 +1,5 @@
+import type { CalculatorInput } from '../types';
+import type { DeductionsResult } from '../deductions/types';
 import type { IncomeTax, IncomeTaxType } from './types';
 import {
   defaultIncomeTaxStrategies,
@@ -20,7 +22,11 @@ export class IncomeTaxCalculator {
     }
   }
 
-  calculate(taxableIncome: number, taxes: IncomeTax): number {
+  calculate(
+    input: CalculatorInput,
+    deductions: DeductionsResult,
+    taxes: IncomeTax
+  ): number {
     const strategy = this.strategies[taxes.type] as
       | AnyIncomeTaxStrategy
       | undefined;
@@ -30,7 +36,11 @@ export class IncomeTaxCalculator {
     type GenericStrategy = IncomeTaxStrategy;
     return Math.max(
       0,
-      (strategy as unknown as GenericStrategy).calculate(taxableIncome, taxes)
+      (strategy as unknown as GenericStrategy).calculate(
+        input,
+        deductions,
+        taxes
+      )
     );
   }
 
