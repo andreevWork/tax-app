@@ -5,6 +5,7 @@ import {
   type CountryMetadata,
 } from '../../data/countries';
 import { getCountryByCode } from '../../api/countries';
+import { useTaxResultStore } from '../taxResult/useTaxResultStore';
 
 interface CountryState {
   availableCountries: CountryMetadata[];
@@ -24,6 +25,7 @@ export const useCountryStore = create<CountryState>((set) => ({
   error: null,
 
   selectCountry: async (code: CountryCode) => {
+    useTaxResultStore.getState().clearResult();
     set({ isLoading: true, error: null, selectedCountryCode: code });
     try {
       const country = await getCountryByCode(code);
