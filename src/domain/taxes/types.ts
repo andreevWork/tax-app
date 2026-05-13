@@ -2,6 +2,7 @@ import { COUNTRIES } from '../../constants/countries';
 import type { ConsumptionTax } from './consumption/types';
 import type { Deductions, DeductionsResult } from './deductions/types';
 import type { IncomeTax } from './income/types';
+import type { PostTaxAdjustment } from './postAdjustments/types';
 
 export type CountryKey = keyof typeof COUNTRIES;
 export type CountryCode = (typeof COUNTRIES)[CountryKey]['countryCode'];
@@ -17,6 +18,7 @@ export interface CountryTaxConfig {
   deductions: Deductions;
 
   consumptionTaxes: ConsumptionTax[];
+  postTaxAdjustments?: PostTaxAdjustment[];
 }
 
 // ===== Calculator I/O =====

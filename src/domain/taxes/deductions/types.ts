@@ -55,4 +55,5 @@ export interface DeductionsResult {
   personal: number;
   children: number;
   totalDeductions: number;
+  familyBenefit?: number;
 }

@@ -6,8 +6,20 @@ import {
   ProgressiveStrategy,
 } from '../income';
 import type { IncomeTax } from '../income/types';
+import type { CalculatorInput } from '../types';
+import type { DeductionsResult } from '../deductions/types';
 
 const calculator = new IncomeTaxCalculator();
+
+function input(gross: number): CalculatorInput {
+  return { gross, childrenCount: 0, isMarried: false };
+}
+
+const noDeductions: DeductionsResult = {
+  personal: 0,
+  children: 0,
+  totalDeductions: 0,
+};
 
 describe('IncomeTaxCalculator', () => {
   describe('base cases', () => {
@@ -20,7 +32,7 @@ describe('IncomeTaxCalculator', () => {
         ],
       };
 
-      const result = calculator.calculate(100_000, taxes);
+      const result = calculator.calculate(input(100_000), noDeductions, taxes);
 
       expect(result).toBe(10_000);
     });
@@ -31,7 +43,7 @@ describe('IncomeTaxCalculator', () => {
         brackets: [{ max: null, rate: 0.2 }],
       };
 
-      const result = calculator.calculate(0, taxes);
+      const result = calculator.calculate(input(0), noDeductions, taxes);
 
       expect(result).toBe(0);
     });
@@ -42,7 +54,7 @@ describe('IncomeTaxCalculator', () => {
         brackets: [{ max: null, rate: 0.2 }],
       } as unknown as IncomeTax;
 
-      const result = calculator.calculate(100_000, taxes);
+      const result = calculator.calculate(input(100_000), noDeductions, taxes);
 
       expect(result).toBe(0);
     });
@@ -59,7 +71,7 @@ describe('IncomeTaxCalculator', () => {
         ],
       };
 
-      const result = calculator.calculate(120_000, taxes);
+      const result = calculator.calculate(input(120_000), noDeductions, taxes);
 
       /**
        * 50k * 0.1 = 5k
@@ -81,7 +93,7 @@ describe('IncomeTaxCalculator', () => {
         ],
       };
 
-      const result = calculator.calculate(50_000, taxes);
+      const result = calculator.calculate(input(50_000), noDeductions, taxes);
 
       expect(result).toBe(5_000);
     });
@@ -92,7 +104,7 @@ describe('IncomeTaxCalculator', () => {
         brackets: [],
       };
 
-      const result = calculator.calculate(100_000, taxes);
+      const result = calculator.calculate(input(100_000), noDeductions, taxes);
 
       expect(result).toBe(0);
     });
@@ -108,7 +120,9 @@ describe('IncomeTaxCalculator', () => {
         brackets: [{ max: null, rate: 0.15 }],
       };
 
-      expect(customCalculator.calculate(100_000, taxes)).toBe(15_000);
+      expect(
+        customCalculator.calculate(input(100_000), noDeductions, taxes)
+      ).toBe(15_000);
     });
   });
 
@@ -231,7 +245,11 @@ describe('FormulaStrategy — §32a EStG 2026 German tax table', () => {
   ];
 
   it.each(officialTable)('zvE = %i€ → ESt = %i€', (income, expectedTax) => {
-    const result = calculator.calculate(income, germanyFormula);
+    const result = calculator.calculate(
+      input(income),
+      noDeductions,
+      germanyFormula
+    );
     expect(result).toBe(expectedTax);
   });
 });

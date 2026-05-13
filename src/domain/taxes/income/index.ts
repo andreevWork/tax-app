@@ -3,6 +3,7 @@ export type { IncomeTaxCalculatorOptions } from './IncomeTaxCalculator';
 
 export {
   defaultIncomeTaxStrategies,
+  FamilyQuotientStrategy,
   FlatStrategy,
   FormulaStrategy,
   ProgressiveStrategy,
@@ -10,6 +11,7 @@ export {
 } from './strategies';
 
 export type {
+  FamilyQuotientConfig,
   FormulaZone,
   IncomeTax,
   IncomeTaxType,

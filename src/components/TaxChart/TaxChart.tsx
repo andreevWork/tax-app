@@ -41,6 +41,12 @@ export function TaxChart({
             label="Children Deduction:"
             value={formatCurrency(result.deductions.children)}
           />
+          {result.deductions.familyBenefit !== undefined && (
+            <ResultRow
+              label="Quotient Familial Benefit:"
+              value={formatCurrency(result.deductions.familyBenefit)}
+            />
+          )}
           <ResultRow
             label="Total Deductions:"
             value={formatCurrency(result.deductions.totalDeductions)}

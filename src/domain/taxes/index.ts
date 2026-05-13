@@ -61,6 +61,18 @@ export {
   type ConsumptionTaxType,
 } from './consumption';
 
+// Post-Tax Adjustments
+export {
+  PostTaxAdjustmentCalculator,
+  DecoteStrategy,
+  defaultPostTaxAdjustmentStrategies,
+  type DecoteConfig,
+  type PostTaxAdjustment,
+  type PostTaxAdjustmentCalculatorOptions,
+  type PostTaxAdjustmentStrategy,
+  type PostTaxAdjustmentType,
+} from './postAdjustments';
+
 // Schemas
 export {
   countrySchema,

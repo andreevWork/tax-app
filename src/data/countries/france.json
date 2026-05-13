@@ -1,0 +1,31 @@
+{
+  "countryCode": "FR",
+  "name": "France",
+  "currency": "EUR",
+  "incomeTax": {
+    "type": "family_quotient",
+    "brackets": [
+      { "max": 11600, "rate": 0 },
+      { "max": 29579, "rate": 0.11 },
+      { "max": 84577, "rate": 0.3 },
+      { "max": 181917, "rate": 0.41 },
+      { "max": null, "rate": 0.45 }
+    ],
+    "capPerHalfPart": 1807
+  },
+  "deductions": {
+    "personal": { "amount": 0 },
+    "children": { "type": "none", "incomeLimit": null, "rules": [] }
+  },
+  "postTaxAdjustments": [
+    {
+      "type": "decote",
+      "singleThreshold": 1982,
+      "jointThreshold": 3277,
+      "singleBase": 897,
+      "jointBase": 1483,
+      "rate": 0.4525
+    }
+  ],
+  "consumptionTaxes": [{ "type": "vat", "rate": 0.2 }]
+}
