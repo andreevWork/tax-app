@@ -6,6 +6,11 @@ import { applyBrackets } from './applyBrackets';
 
 type FamilyQuotientIncomeTax = Extract<IncomeTax, { type: 'family_quotient' }>;
 
+const MARRIED_PARTS = 2;
+const SINGLE_PARTS = 1;
+const REDUCED_RATE_CHILDREN = 2;
+const HALF_PART_PER_CHILD = 0.5;
+
 export class FamilyQuotientStrategy
   implements IncomeTaxStrategy<FamilyQuotientIncomeTax>
 {
@@ -18,10 +23,10 @@ export class FamilyQuotientStrategy
   ): number {
     const { gross, isMarried, childrenCount } = input;
 
-    const baseParts = isMarried ? 2 : 1;
-    // First two children each add 1/2 part; third child onward adds 1 full part
+    const baseParts = isMarried ? MARRIED_PARTS : SINGLE_PARTS;
     const childParts =
-      Math.min(childrenCount, 2) * 0.5 + Math.max(0, childrenCount - 2);
+      Math.min(childrenCount, REDUCED_RATE_CHILDREN) * HALF_PART_PER_CHILD +
+      Math.max(0, childrenCount - REDUCED_RATE_CHILDREN);
     const totalParts = baseParts + childParts;
 
     const taxWithBaseParts =
@@ -34,9 +39,7 @@ export class FamilyQuotientStrategy
 
     const rawBenefit = taxWithBaseParts - taxWithTotalParts;
 
-    // Cap: 1 half-part per child up to 2; 2 half-parts per child beyond 2
-    const extraHalfParts =
-      Math.min(childrenCount, 2) + Math.max(0, childrenCount - 2) * 2;
+    const extraHalfParts = childParts / HALF_PART_PER_CHILD;
     const maxBenefit = taxConfig.capPerHalfPart * extraHalfParts;
 
     return taxWithBaseParts - Math.min(rawBenefit, maxBenefit);
