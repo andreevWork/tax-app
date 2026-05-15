@@ -1,7 +1,7 @@
-import type { CalculatorInput } from '../../types';
-import type { DeductionsResult } from '../../deductions/types';
-import type { IncomeTax } from '../types';
-import type { IncomeTaxStrategy } from './types';
+import type { CalculatorInput } from '../../../types';
+import type { DeductionsResult } from '../../../deductions/types';
+import type { IncomeTax } from '../../types';
+import type { IncomeTaxStrategy } from '../types';
 
 export class FlatStrategy
   implements IncomeTaxStrategy<Extract<IncomeTax, { type: 'flat' }>>

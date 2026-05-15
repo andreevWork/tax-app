@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
   FlatStrategy,
-  FormulaStrategy,
   IncomeTaxCalculator,
   ProgressiveStrategy,
 } from '../income';
@@ -153,20 +152,13 @@ describe('Income Tax Strategies', () => {
       expect(strategy.type).toBe('flat');
     });
   });
-
-  describe('FormulaStrategy', () => {
-    it('has correct type', () => {
-      const strategy = new FormulaStrategy();
-      expect(strategy.type).toBe('formula');
-    });
-  });
 });
 
-describe('FormulaStrategy — §32a EStG 2026 German tax table', () => {
+describe('GermanyFormulaStrategy — §32a EStG 2026 German tax table', () => {
   const calculator = new IncomeTaxCalculator();
 
   const germanyFormula: IncomeTax = {
-    type: 'formula',
+    type: 'unique',
     formulaZones: [
       {
         upTo: 12348,
@@ -248,7 +240,8 @@ describe('FormulaStrategy — §32a EStG 2026 German tax table', () => {
     const result = calculator.calculate(
       input(income),
       noDeductions,
-      germanyFormula
+      germanyFormula,
+      'DE'
     );
     expect(result).toBe(expectedTax);
   });

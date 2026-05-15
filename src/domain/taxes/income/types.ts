@@ -1,8 +1,4 @@
-export type IncomeTaxType =
-  | 'progressive'
-  | 'flat'
-  | 'formula'
-  | 'family_quotient';
+export type IncomeTaxType = 'progressive' | 'flat' | 'unique';
 
 export interface TaxBracket {
   max: number | null;
@@ -24,8 +20,10 @@ export interface FamilyQuotientConfig {
   capPerHalfPart: number;
 }
 
+// Country-specific tax configs share the 'unique' tag at this level. Extra
+// fields are opaque here (matches Zod's passthrough() semantics) — their full
+// shape is declared next to the per-country strategy that handles them.
 export type IncomeTax =
   | { type: 'progressive'; brackets: TaxBracket[] }
   | { type: 'flat'; brackets: TaxBracket[] }
-  | { type: 'formula'; formulaZones: FormulaZone[] }
-  | ({ type: 'family_quotient' } & FamilyQuotientConfig);
+  | { type: 'unique'; [key: string]: unknown };

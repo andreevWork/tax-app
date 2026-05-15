@@ -1,4 +1,4 @@
-import type { TaxBracket } from '../types';
+import type { TaxBracket } from '../../types';
 
 export function applyBrackets(income: number, brackets: TaxBracket[]): number {
   let rest = income;

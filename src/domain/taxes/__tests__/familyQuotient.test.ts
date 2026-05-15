@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { FamilyQuotientStrategy, IncomeTaxCalculator } from '../income';
+import { FranceFamilyQuotientStrategy, IncomeTaxCalculator } from '../income';
 import type { IncomeTax } from '../income/types';
 import type { CalculatorInput } from '../types';
 import type { DeductionsResult } from '../deductions/types';
 
 const frBrackets: IncomeTax = {
-  type: 'family_quotient',
+  type: 'unique',
   brackets: [
     { max: 11600, rate: 0 },
     { max: 29579, rate: 0.11 },
@@ -32,9 +32,11 @@ function input(
 
 const calculator = new IncomeTaxCalculator();
 
-describe('FamilyQuotientStrategy', () => {
-  it('has correct type', () => {
-    expect(new FamilyQuotientStrategy().type).toBe('family_quotient');
+describe('FranceFamilyQuotientStrategy', () => {
+  it('has correct type and countryCode', () => {
+    const strategy = new FranceFamilyQuotientStrategy();
+    expect(strategy.type).toBe('unique');
+    expect(strategy.countryCode).toBe('FR');
   });
 
   describe('single taxpayer, no children — 1 part', () => {
@@ -43,7 +45,8 @@ describe('FamilyQuotientStrategy', () => {
       const result = calculator.calculate(
         input(30_000, false, 0),
         noDeductions,
-        frBrackets
+        frBrackets,
+        'FR'
       );
       expect(result).toBeCloseTo(2103.99, 1);
     });
@@ -52,7 +55,8 @@ describe('FamilyQuotientStrategy', () => {
       const result = calculator.calculate(
         input(10_000, false, 0),
         noDeductions,
-        frBrackets
+        frBrackets,
+        'FR'
       );
       expect(result).toBe(0);
     });
@@ -65,7 +69,8 @@ describe('FamilyQuotientStrategy', () => {
       const result = calculator.calculate(
         input(60_000, true, 0),
         noDeductions,
-        frBrackets
+        frBrackets,
+        'FR'
       );
       expect(result).toBeCloseTo(4207.98, 1);
     });
@@ -84,7 +89,8 @@ describe('FamilyQuotientStrategy', () => {
       const result = calculator.calculate(
         input(90_000, true, 2),
         noDeductions,
-        frBrackets
+        frBrackets,
+        'FR'
       );
       expect(result).toBeCloseTo(9593.98, 1);
     });
@@ -96,12 +102,14 @@ describe('FamilyQuotientStrategy', () => {
       const withChildren = calculator.calculate(
         input(25_000, true, 2),
         noDeductions,
-        frBrackets
+        frBrackets,
+        'FR'
       );
       const withoutChildren = calculator.calculate(
         input(25_000, true, 0),
         noDeductions,
-        frBrackets
+        frBrackets,
+        'FR'
       );
       // Benefit should be less than 1807 × 2 = 3614
       expect(withoutChildren - withChildren).toBeLessThan(3614);
@@ -112,7 +120,8 @@ describe('FamilyQuotientStrategy', () => {
       const result = calculator.calculate(
         input(90_000, true, 2),
         noDeductions,
-        frBrackets
+        frBrackets,
+        'FR'
       );
       // Without cap it would be 6311.97; with cap it's 9593.98
       expect(result).toBeGreaterThan(6311);
@@ -125,12 +134,14 @@ describe('FamilyQuotientStrategy', () => {
       const twoKids = calculator.calculate(
         input(90_000, true, 2),
         noDeductions,
-        frBrackets
+        frBrackets,
+        'FR'
       );
       const threeKids = calculator.calculate(
         input(90_000, true, 3),
         noDeductions,
-        frBrackets
+        frBrackets,
+        'FR'
       );
       expect(threeKids).toBeLessThan(twoKids);
     });

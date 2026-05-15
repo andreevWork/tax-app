@@ -3,9 +3,9 @@ export type { IncomeTaxCalculatorOptions } from './IncomeTaxCalculator';
 
 export {
   defaultIncomeTaxStrategies,
-  FamilyQuotientStrategy,
+  FranceFamilyQuotientStrategy,
   FlatStrategy,
-  FormulaStrategy,
+  GermanyFormulaStrategy,
   ProgressiveStrategy,
   type IncomeTaxStrategy,
 } from './strategies';

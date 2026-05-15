@@ -3,7 +3,7 @@
   "name": "Germany",
   "currency": "EUR",
   "incomeTax": {
-    "type": "formula",
+    "type": "unique",
     "formulaZones": [
       {
         "upTo": 12348,

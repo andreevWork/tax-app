@@ -51,7 +51,7 @@ export function useCaseSettingsFields() {
   }, [selectedCurrency, gross, rates, setGross]);
 
   const usesHouseholdTaxation =
-    !!selectedCountry && selectedCountry.incomeTax.type === 'family_quotient';
+    !!selectedCountry && selectedCountry.countryCode === 'FR';
 
   const showMarriedField =
     !!selectedCountry &&

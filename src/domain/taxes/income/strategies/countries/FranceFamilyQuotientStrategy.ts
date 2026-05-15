@@ -1,25 +1,30 @@
-import type { CalculatorInput } from '../../types';
-import type { DeductionsResult } from '../../deductions/types';
-import type { IncomeTax } from '../types';
-import type { IncomeTaxStrategy } from './types';
-import { applyBrackets } from './applyBrackets';
+import type { CalculatorInput } from '../../../types';
+import type { DeductionsResult } from '../../../deductions/types';
+import type { TaxBracket } from '../../types';
+import type { IncomeTaxStrategy } from '../types';
+import { applyBrackets } from '../utils/applyBrackets';
 
-type FamilyQuotientIncomeTax = Extract<IncomeTax, { type: 'family_quotient' }>;
+export interface FranceFamilyQuotientConfig {
+  type: 'unique';
+  brackets: TaxBracket[];
+  capPerHalfPart: number;
+}
 
 const MARRIED_PARTS = 2;
 const SINGLE_PARTS = 1;
 const REDUCED_RATE_CHILDREN = 2;
 const HALF_PART_PER_CHILD = 0.5;
 
-export class FamilyQuotientStrategy
-  implements IncomeTaxStrategy<FamilyQuotientIncomeTax>
+export class FranceFamilyQuotientStrategy
+  implements IncomeTaxStrategy<FranceFamilyQuotientConfig>
 {
-  readonly type = 'family_quotient' as const;
+  readonly type = 'unique' as const;
+  readonly countryCode = 'FR' as const;
 
   calculate(
     input: CalculatorInput,
     _deductions: DeductionsResult,
-    taxConfig: FamilyQuotientIncomeTax
+    taxConfig: FranceFamilyQuotientConfig
   ): number {
     const { gross, isMarried, childrenCount } = input;
 
