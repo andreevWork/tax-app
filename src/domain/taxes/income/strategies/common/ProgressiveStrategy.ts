@@ -1,8 +1,8 @@
-import type { CalculatorInput } from '../../types';
-import type { DeductionsResult } from '../../deductions/types';
-import type { IncomeTax } from '../types';
-import type { IncomeTaxStrategy } from './types';
-import { applyBrackets } from './applyBrackets';
+import type { CalculatorInput } from '../../../types';
+import type { DeductionsResult } from '../../../deductions/types';
+import type { IncomeTax } from '../../types';
+import type { IncomeTaxStrategy } from '../types';
+import { applyBrackets } from '../utils/applyBrackets';
 
 export class ProgressiveStrategy
   implements IncomeTaxStrategy<Extract<IncomeTax, { type: 'progressive' }>>

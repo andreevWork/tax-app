@@ -51,10 +51,19 @@ That's it! The country will automatically appear in the selector and load on dem
 
 ### incomeTax
 
-| Field      | Type                                       | Description          |
-| ---------- | ------------------------------------------ | -------------------- |
-| `type`     | `"progressive"` \| `"flat"` \| `"formula"` | Tax calculation type |
-| `brackets` | `TaxBracket[]`                             | Tax rates            |
+| Field      | Type                                      | Description          |
+| ---------- | ----------------------------------------- | -------------------- |
+| `type`     | `"progressive"` \| `"flat"` \| `"unique"` | Tax calculation type |
+| `brackets` | `TaxBracket[]`                            | Tax rates            |
+
+Strategy implementations live in `src/domain/taxes/income/strategies/`:
+
+- `common/ProgressiveStrategy` handles `progressive`
+- `common/FlatStrategy` handles `flat`
+- `countries/GermanyFormulaStrategy` handles `unique` for `countryCode === 'DE'` (Germany's § 32a EStG)
+- `countries/FranceFamilyQuotientStrategy` handles `unique` for `countryCode === 'FR'` (France's quotient familial)
+
+**Country-specific strategies all use `type: "unique"`** and are resolved by `countryCode` at runtime. This keeps the central `IncomeTaxType` stable (`'progressive' | 'flat' | 'unique'`) regardless of how many country-specific strategies are added — and prevents accidental reuse: if Belgium needs a family quotient with different rules, it gets its own strategy with `countryCode === 'BE'` rather than silently picking up France's math.
 
 **Progressive** — progressive tax scale (each bracket applies to its portion of income):
 
@@ -233,40 +242,63 @@ ZodError: [
 
 ---
 
-## Adding a New Calculation Type
+## Adding a Country-Specific Strategy
 
-If you need a new `type` (e.g., `"cantonal"` for Switzerland):
+If a country needs math that doesn't fit `progressive` or `flat` (e.g., Switzerland's cantonal model), you add a new **strategy**, not a new central type. The country's JSON uses `"type": "unique"` and the strategy is resolved by `countryCode`.
 
-1. Add type to `src/domain/taxes/income/types.ts`:
-
-   ```typescript
-   export type IncomeTaxType = 'progressive' | 'flat' | 'cantonal';
-   ```
-
-2. Create strategy in `src/domain/taxes/income/strategies/`:
+1. Create the strategy in `src/domain/taxes/income/strategies/countries/`. Name the class `<Country><MathName>Strategy` and define its config interface in the same file:
 
    ```typescript
-   // CantonalStrategy.ts
-   export class CantonalStrategy implements IncomeTaxStrategy {
-     readonly type = 'cantonal' as const;
+   // strategies/countries/SwitzerlandCantonalStrategy.ts
+   import type { CalculatorInput } from '../../../types';
+   import type { DeductionsResult } from '../../../deductions/types';
+   import type { IncomeTaxStrategy } from '../types';
 
-     calculate(taxableIncome: number, taxConfig: IncomeTax): number {
-       // Calculation logic
+   interface SwitzerlandCantonalConfig {
+     type: 'unique';
+     // ...fields specific to Switzerland's tax config
+   }
+
+   export class SwitzerlandCantonalStrategy
+     implements IncomeTaxStrategy<SwitzerlandCantonalConfig>
+   {
+     readonly type = 'unique' as const;
+     readonly countryCode = 'CH' as const;
+
+     calculate(
+       input: CalculatorInput,
+       deductions: DeductionsResult,
+       taxConfig: SwitzerlandCantonalConfig
+     ): number {
+       // Calculation logic — taxConfig is fully typed here
      }
    }
    ```
 
-3. Register in `src/domain/taxes/income/strategies/index.ts`:
+2. Register in `src/domain/taxes/income/strategies/index.ts` (export + add to `defaultIncomeTaxStrategies`):
 
    ```typescript
+   export { SwitzerlandCantonalStrategy } from './countries/SwitzerlandCantonalStrategy';
+   import { SwitzerlandCantonalStrategy } from './countries/SwitzerlandCantonalStrategy';
+
    export const defaultIncomeTaxStrategies: IncomeTaxStrategy[] = [
      new ProgressiveStrategy(),
      new FlatStrategy(),
-     new CantonalStrategy(), // ← add here
+     new GermanyFormulaStrategy(),
+     new FranceFamilyQuotientStrategy(),
+     new SwitzerlandCantonalStrategy(), // ← add here
    ];
    ```
 
-4. Update Zod schema in `src/domain/taxes/schemas/countrySchema.ts`:
-   ```typescript
-   type: z.enum(['progressive', 'flat', 'cantonal']),
+3. In the country's JSON file, use `"type": "unique"`:
+
+   ```json
+   "incomeTax": {
+     "type": "unique",
+     // ...country-specific fields
+   }
    ```
+
+4. **No changes needed in `IncomeTaxType`, `IncomeTax`, or `incomeTaxSchema`** — they stay stable. The `'unique'` branch in Zod accepts extra fields via `z.looseObject(...)`, and the strategy itself reads only the fields it expects.
+
+5. If a UI behavior is country-specific (e.g., showing the "married" field only for household-taxation countries), gate it by `countryCode` directly in the hook (see `useCaseSettingsFields.ts` for the FR pattern), not by `incomeTax.type`.

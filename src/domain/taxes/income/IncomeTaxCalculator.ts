@@ -1,19 +1,21 @@
-import type { CalculatorInput } from '../types';
+import type { CalculatorInput, CountryCode } from '../types';
 import type { DeductionsResult } from '../deductions/types';
 import type { IncomeTax, IncomeTaxType } from './types';
 import {
   defaultIncomeTaxStrategies,
   type IncomeTaxStrategy,
-  type AnyIncomeTaxStrategy,
-  type StrategyMap,
 } from './strategies';
 
 export interface IncomeTaxCalculatorOptions {
-  strategies?: AnyIncomeTaxStrategy[];
+  strategies?: IncomeTaxStrategy[];
 }
 
 export class IncomeTaxCalculator {
-  private readonly strategies: StrategyMap = {};
+  private readonly strategiesByType: Record<string, IncomeTaxStrategy> = {};
+  private readonly uniqueStrategiesByCountry: Record<
+    string,
+    IncomeTaxStrategy
+  > = {};
 
   constructor(options: IncomeTaxCalculatorOptions = {}) {
     const strategies = options.strategies ?? defaultIncomeTaxStrategies;
@@ -25,35 +27,45 @@ export class IncomeTaxCalculator {
   calculate(
     input: CalculatorInput,
     deductions: DeductionsResult,
-    taxes: IncomeTax
+    taxes: IncomeTax,
+    countryCode?: CountryCode
   ): number {
-    const strategy = this.strategies[taxes.type] as
-      | AnyIncomeTaxStrategy
-      | undefined;
-
+    const strategy = this.selectStrategy(taxes.type, countryCode);
     if (!strategy) return 0;
 
-    type GenericStrategy = IncomeTaxStrategy;
-    return Math.max(
-      0,
-      (strategy as unknown as GenericStrategy).calculate(
-        input,
-        deductions,
-        taxes
-      )
-    );
+    // Cast: at this boundary IncomeTax is wider than the strategy's narrow
+    // config type. Strategy correctness for its country is enforced by
+    // Zod validation upstream and by the (type, countryCode) routing.
+    return Math.max(0, strategy.calculate(input, deductions, taxes as never));
   }
 
-  registerStrategy(strategy: AnyIncomeTaxStrategy): void {
-    // Requires a type assertion to bypass correlated union indexing limits
-    const typedStrategies = this.strategies as Record<
-      string,
-      AnyIncomeTaxStrategy
-    >;
-    typedStrategies[strategy.type] = strategy;
+  registerStrategy(strategy: IncomeTaxStrategy): void {
+    if (strategy.type === 'unique') {
+      const { countryCode } = strategy;
+      if (typeof countryCode !== 'string') {
+        throw new Error(
+          `Strategy with type "unique" must declare a countryCode (got: ${strategy.constructor.name})`
+        );
+      }
+      this.uniqueStrategiesByCountry[countryCode] = strategy;
+    } else {
+      this.strategiesByType[strategy.type] = strategy;
+    }
   }
 
-  hasStrategy(type: IncomeTaxType): boolean {
-    return this.strategies[type] !== undefined;
+  hasStrategy(type: IncomeTaxType, countryCode?: string): boolean {
+    return this.selectStrategy(type, countryCode) !== undefined;
+  }
+
+  private selectStrategy(
+    type: IncomeTaxType,
+    countryCode: string | undefined
+  ): IncomeTaxStrategy | undefined {
+    if (type === 'unique') {
+      return countryCode
+        ? this.uniqueStrategiesByCountry[countryCode]
+        : undefined;
+    }
+    return this.strategiesByType[type];
   }
 }

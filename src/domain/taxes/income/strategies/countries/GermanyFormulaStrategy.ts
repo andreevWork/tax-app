@@ -1,7 +1,12 @@
-import type { CalculatorInput } from '../../types';
-import type { DeductionsResult } from '../../deductions/types';
-import type { FormulaZone, IncomeTax } from '../types';
-import type { IncomeTaxStrategy } from './types';
+import type { CalculatorInput } from '../../../types';
+import type { DeductionsResult } from '../../../deductions/types';
+import type { FormulaZone } from '../../types';
+import type { IncomeTaxStrategy } from '../types';
+
+export interface GermanyFormulaConfig {
+  type: 'unique';
+  formulaZones: FormulaZone[];
+}
 
 function sortByUpTo(zones: FormulaZone[]): FormulaZone[] {
   return [...zones].sort((a, b) => {
@@ -11,15 +16,16 @@ function sortByUpTo(zones: FormulaZone[]): FormulaZone[] {
   });
 }
 
-export class FormulaStrategy
-  implements IncomeTaxStrategy<Extract<IncomeTax, { type: 'formula' }>>
+export class GermanyFormulaStrategy
+  implements IncomeTaxStrategy<GermanyFormulaConfig>
 {
-  readonly type = 'formula' as const;
+  readonly type = 'unique' as const;
+  readonly countryCode = 'DE' as const;
 
   calculate(
     input: CalculatorInput,
     deductions: DeductionsResult,
-    taxConfig: Extract<IncomeTax, { type: 'formula' }>
+    taxConfig: GermanyFormulaConfig
   ): number {
     // Personal allowance is built into the formula zones (first zero-rate zone).
     // Subtracting totalDeductions would double-count it, so only children deductions

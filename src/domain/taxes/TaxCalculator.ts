@@ -37,7 +37,8 @@ export class TaxCalculator {
     const rawIncomeTax = this.incomeTaxCalculator.calculate(
       inputs,
       deductions,
-      country.incomeTax
+      country.incomeTax,
+      country.countryCode
     );
 
     const familyBenefit = this.computeFamilyBenefit(
@@ -88,17 +89,15 @@ export class TaxCalculator {
     rawIncomeTax: number,
     country: CountryTaxConfig
   ): number | undefined {
-    if (
-      country.incomeTax.type !== 'family_quotient' ||
-      inputs.childrenCount === 0
-    ) {
+    if (country.countryCode !== 'FR' || inputs.childrenCount === 0) {
       return undefined;
     }
 
     const taxWithNoChildren = this.incomeTaxCalculator.calculate(
       { ...inputs, childrenCount: 0 },
       deductions,
-      country.incomeTax
+      country.incomeTax,
+      country.countryCode
     );
 
     return taxWithNoChildren - rawIncomeTax;

@@ -15,6 +15,9 @@ export const formulaZoneSchema = z.object({
   usesVariable: z.boolean(),
 });
 
+// Country-specific configs use type: 'unique' at this level and pass any extra
+// fields through. Their detailed shape is validated by the per-country
+// strategy that handles them (selected via countryCode).
 export const incomeTaxSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('progressive'),
@@ -24,15 +27,7 @@ export const incomeTaxSchema = z.discriminatedUnion('type', [
     type: z.literal('flat'),
     brackets: z.array(taxBracketSchema).min(1),
   }),
-  z.object({
-    type: z.literal('formula'),
-    formulaZones: z.array(formulaZoneSchema).min(1),
-  }),
-  z.object({
-    type: z.literal('family_quotient'),
-    brackets: z.array(taxBracketSchema).min(1),
-    capPerHalfPart: z.number().positive(),
-  }),
+  z.looseObject({ type: z.literal('unique') }),
 ]);
 
 // ===== Deductions =====

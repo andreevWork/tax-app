@@ -3,7 +3,7 @@
   "name": "France",
   "currency": "EUR",
   "incomeTax": {
-    "type": "family_quotient",
+    "type": "unique",
     "brackets": [
       { "max": 11600, "rate": 0 },
       { "max": 29579, "rate": 0.11 },

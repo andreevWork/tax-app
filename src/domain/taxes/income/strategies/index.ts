@@ -1,23 +1,19 @@
-export type {
-  IncomeTaxStrategy,
-  AnyIncomeTaxStrategy,
-  StrategyMap,
-} from './types';
+export type { IncomeTaxStrategy } from './types';
 
-export { FlatStrategy } from './FlatStrategy';
-export { FormulaStrategy } from './FormulaStrategy';
-export { ProgressiveStrategy } from './ProgressiveStrategy';
-export { FamilyQuotientStrategy } from './FamilyQuotientStrategy';
+export { FlatStrategy } from './common/FlatStrategy';
+export { GermanyFormulaStrategy } from './countries/GermanyFormulaStrategy';
+export { ProgressiveStrategy } from './common/ProgressiveStrategy';
+export { FranceFamilyQuotientStrategy } from './countries/FranceFamilyQuotientStrategy';
 
-import { FlatStrategy } from './FlatStrategy';
-import { FormulaStrategy } from './FormulaStrategy';
-import { ProgressiveStrategy } from './ProgressiveStrategy';
-import { FamilyQuotientStrategy } from './FamilyQuotientStrategy';
+import { FlatStrategy } from './common/FlatStrategy';
+import { GermanyFormulaStrategy } from './countries/GermanyFormulaStrategy';
+import { ProgressiveStrategy } from './common/ProgressiveStrategy';
+import { FranceFamilyQuotientStrategy } from './countries/FranceFamilyQuotientStrategy';
 import type { IncomeTaxStrategy } from './types';
 
 export const defaultIncomeTaxStrategies: IncomeTaxStrategy[] = [
   new ProgressiveStrategy(),
+  new GermanyFormulaStrategy(),
   new FlatStrategy(),
-  new FormulaStrategy(),
-  new FamilyQuotientStrategy(),
+  new FranceFamilyQuotientStrategy(),
 ];
